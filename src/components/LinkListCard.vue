@@ -9,16 +9,6 @@
       <v-layout align-center fill-height>
         <v-flex align-end xs12 flexbox>
     <v-bottom-sheet inset>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="red"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Open Player
-        </v-btn>
-      </template>
       <v-card tile>
         <v-progress-linear
           :value="50"
@@ -67,13 +57,14 @@
           :src="link.photoURL"
           height="200px"
           >
-          <v-btn text
+          <v-btn color="indigo"
           v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}"
           >
           {{ link.userinfo.displayName }}
           </v-btn>
           </v-img>
           </router-link>
+          <audio controls :src="link.voiceURL"></audio>
           <router-link v-bind:to="{name: 'LinkPage',
             params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }">
           <v-card-title class="card__title">

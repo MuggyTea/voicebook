@@ -56,7 +56,7 @@ initRecording() {
         var br = document.createElement('br')
         output.appendChild(br)
         // LinkListFormにデータを渡す
-        
+        this.$emit('audioData', audioBlob, url)
     this.status = 'ready';
 
     });

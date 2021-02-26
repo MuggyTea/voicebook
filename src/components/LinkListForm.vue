@@ -7,45 +7,37 @@
         <div class="card-body text-left">
             <textarea class="form-control" placeholder="descriptioin" v-model.trim="link.description"></textarea>
         </div>
-        <!-- <button class="button" @click="showForm = ! showForm">
-          <i class="icon ion-md-add"></i>
-          photo upload
-        </button> -->
-        <!-- <PhotoUpload v-model="showForm" /> -->
-                <!-- <output class="form__output" v-if="preview">
-                    <img
-                        :src="preview"
-                        alt=""
-                        width="200px"
-                        >
-                </output> -->
-                <v-card-actions>
-                  <v-btn color="white" v-model.trim="link.voice_rec">
-                    <voice-recorder></voice-recorder>
-                  </v-btn>
-                </v-card-actions>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                    <v-btn color="primary"
-                    label="Select Image"
-                    @click="pickFile"
-                    v-model="imageName"
-                    prepend-icon="attach_file"
-                    >
-                      アイキャッチ画像
-                      <input
-                      type="file"
-                      style="display: none"
-                      ref="image"
-                      accept="image/*"
-                      @change="onFilePicked"
-                      />
-                    </v-btn>
-                </v-card-actions>
-                <!-- サムネイル表示領域 -->
-                <output class="form__output" v-if="preview" width="300px" height="300px">
-                    <canvas id="canvas"></canvas>
-                </output>
+          <v-card-actions>
+            <v-btn color="white" v-model.trim="link.voice_rec">
+              <voice-recorder
+                :voiceUrl="voiceUrl"
+                :voiceBlob="voiceBlob"
+                @audioData="emitEvent"
+              ></voice-recorder>
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+              <v-btn color="primary"
+              label="Select Image"
+              @click="pickFile"
+              v-model="imageName"
+              prepend-icon="attach_file"
+              >
+                アイキャッチ画像
+                <input
+                type="file"
+                style="display: none"
+                ref="image"
+                accept="image/*"
+                @change="onFilePicked"
+                />
+              </v-btn>
+          </v-card-actions>
+          <!-- サムネイル表示領域 -->
+          <output class="form__output" v-if="preview" width="300px" height="300px">
+              <canvas id="canvas"></canvas>
+          </output>
         <div class="card-footer text-right">
             <button class="btn-sm btn-secondary" type="submit" v-on:click.prevent="addLink">投稿</button>
         </div>
@@ -77,11 +69,18 @@ export default {
       imageName: null,
       imageURL: null,
       imageFile: null,
-      voiceData: null,
-      voiceObj: {}
+      voiceBlob: null,
+      voiceUrl: null,
+      voiceStrageUrl: null
     }
   },
   methods: {
+    emitEvent(voiceBlob, voiceUrl) {
+      this.voiceBlob = voiceBlob
+      this.voiceUrl = voiceUrl
+      console.log(this.voiceBlob)
+      console.log(this.voiceUrl)
+    },
     addLink () {
       if (!this.link.link_title || !this.link.description) {
         return
@@ -104,42 +103,12 @@ export default {
         // 空に戻す
         this.link = this.emptyLink()
       }
-      // // 画像をリサイズする
-      // const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
-      // const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
       var blob = null // 画像blobデータ
-      // // ファイルリーダーを立ち上げる
-      // const image = new Image()
-      // // 画像が読み込まれたタイミングで実行される
-      // // 画像をリサイズする
-      // var width, height;
-      // if (image.width > image.height) {
-      //   // 横長の画像は横のサイズを指定値に合わせる
-      //   var ratio_w = image.height / image.width
-      //   width = THUMBNAIL_WIDTH
-      //   height = THUMBNAIL_HEIGHT * ratio_w
-      // } else {
-      //   // 縦長の場合は縦のサイズを指定ちに合わせる
-      //   var ratio_h = image.width / image.height
-      //   width = THUMBNAIL_HEIGHT * ratio_h
-      //   height = THUMBNAIL_HEIGHT
-      // }
       // // サムネ画像用canvasのサイズを上で算出した値に変更
       var canvas = document.getElementById("canvas")
-      // canvas.width = width
-      // canvas.height = height
-      // var ctx = canvas.getContext("2d")
-      // console.log(ctx)
-      // // canvasに既に描画されている画像をクリア
-      // ctx.clearRect(0, 0, width, height)
-      // ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, height)
-      // console.log(canvas)
-      // console.log(ctx)
       // canvasからbase64画像データを取得
       var base64_url = canvas.toDataURL('image/jpeg')
       console.log(base64_url)
-      // var base64 = window.btoa(base64_url)
-      // var base64 = ctx.getImageData(0, 0, width, height)
       // base64からblobデータを作成
       var base64 = String(base64_url).split('base64,')
       var barr, bin , i, len
@@ -160,13 +129,7 @@ export default {
       console.log(blob)
       // this.imageURL = reader.result
       this.imageFile = blob
-      // console.log(this.imageFile)
-      // this.imageFile = fd
-      // canvasに表示されている画像を取得
-      // var canvas = document.getElementById('canvas');
-      // this.imageFile = canvas.toDataURL('image/png')
       console.log(this.imageFile)
-      // this.imageName = event.target.files[0].name
       console.log(this.imageName)
       // firestoreに画像を保存するストレージオブジェクト作成
       const storageRef = firebase.storage().ref()
@@ -183,9 +146,28 @@ export default {
         this.imageURL = downloadURL
         console.log(this.imageURL)
         this.link.photoURL = downloadURL
-        // firestore.collection('LinkPage').add({
-        //   'photoURL': downloadURL
-        // })
+        console.log(this.link)
+        // ステートを変更
+        // this.$store.dispatch('links/addLink', this.link)
+        // // 空に戻す
+        // this.link = this.emptyLink()
+        // this.preview = null
+        })
+      })
+      console.log(this.voiceBlob)
+      console.log(this.voiceUrl)
+      // 音声データを格納する
+      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.wav')
+      // Create file metadata including the content type
+      var metadata_a = {
+        contentType: 'audio/wav',
+      };
+      // ファイルを適用してファイルアップロード
+      mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
+        snapshot.ref.getDownloadURL().then(downloadURL => {
+        this.voiceStrageUrl = downloadURL
+        console.log(this.voiceStrageUrl)
+        this.link.voiceURL = downloadURL
         console.log(this.link)
         // ステートを変更
         this.$store.dispatch('links/addLink', this.link)
@@ -195,17 +177,11 @@ export default {
         })
       })
       // ステートを変更
-      // this.$store.dispatch('links/addLink', this.link)
-      // this.imageName = event.target.files[0].name
       console.log(this.imageFile)
       console.log(typeof this.imageFile)
       console.log(this.imageName)
       console.log(String(this.imageName))
-      // ステートを変更
-      // this.$store.dispatch('links/addLink', this.link)
-      // 空に戻す
-      // this.link = this.emptyLink()
-      // this.preview = null
+      console.log(this.voiceStrageUrl)
     },
     emptyLink () {
       console.log('empty link')

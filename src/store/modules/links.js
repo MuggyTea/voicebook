@@ -104,7 +104,8 @@ export default {
                                 createAt: new Date(change.doc.data().createAt.seconds * 1000),
                                 photoURL: change.doc.data().photoURL,
                                 uid: change.doc.data().uid,
-                                userinfo: change.doc.data().userinfo
+                                userinfo: change.doc.data().userinfo,
+                                voiceURL: change.doc.data().voiceURL
                             }
                             // 時刻がnullのものとログインユーザー以外は表示しない
                         if (!change.doc.data().screenName || !change.doc.data().createAt) {
@@ -166,7 +167,8 @@ export default {
                             createAt: new Date(change.doc.data().createAt.seconds * 1000),
                             photoURL: change.doc.data().photoURL,
                             uid: change.doc.data().uid,
-                            userinfo: change.doc.data().userinfo
+                            userinfo: change.doc.data().userinfo,
+                            voiceURL: change.doc.data().voiceURL
                         }
 
                         // ミューテーションを通してステートを更新する
