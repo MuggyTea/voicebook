@@ -43,7 +43,7 @@
                     </v-btn>
                 </v-card-actions>
                 <!-- サムネイル表示領域 -->
-                <output class="form__output" v-if="preview" width="200px">
+                <output class="form__output" v-if="preview" width="300px" height="300px">
                     <canvas id="canvas"></canvas>
                 </output>
         <div class="card-footer text-right">
@@ -102,37 +102,37 @@ export default {
         // 空に戻す
         this.link = this.emptyLink()
       }
-      // 画像をリサイズする
-      const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
-      const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
+      // // 画像をリサイズする
+      // const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
+      // const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
       var blob = null // 画像blobデータ
-      // ファイルリーダーを立ち上げる
-      const image = new Image()
-      // 画像が読み込まれたタイミングで実行される
-      // 画像をリサイズする
-      var width, height;
-      if (image.width > image.height) {
-        // 横長の画像は横のサイズを指定値に合わせる
-        var ratio_w = image.height / image.width
-        width = THUMBNAIL_WIDTH
-        height = THUMBNAIL_HEIGHT * ratio_w
-      } else {
-        // 縦長の場合は縦のサイズを指定ちに合わせる
-        var ratio_h = image.width / image.height
-        width = THUMBNAIL_HEIGHT * ratio_h
-        height = THUMBNAIL_HEIGHT
-      }
-      // サムネ画像用canvasのサイズを上で算出した値に変更
+      // // ファイルリーダーを立ち上げる
+      // const image = new Image()
+      // // 画像が読み込まれたタイミングで実行される
+      // // 画像をリサイズする
+      // var width, height;
+      // if (image.width > image.height) {
+      //   // 横長の画像は横のサイズを指定値に合わせる
+      //   var ratio_w = image.height / image.width
+      //   width = THUMBNAIL_WIDTH
+      //   height = THUMBNAIL_HEIGHT * ratio_w
+      // } else {
+      //   // 縦長の場合は縦のサイズを指定ちに合わせる
+      //   var ratio_h = image.width / image.height
+      //   width = THUMBNAIL_HEIGHT * ratio_h
+      //   height = THUMBNAIL_HEIGHT
+      // }
+      // // サムネ画像用canvasのサイズを上で算出した値に変更
       var canvas = document.getElementById("canvas")
-      canvas.width = width
-      canvas.height = height
-      var ctx = canvas.getContext("2d")
-      console.log(ctx)
-      // canvasに既に描画されている画像をクリア
-      ctx.clearRect(0, 0, width, height)
-      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, height)
-      console.log(canvas)
-      console.log(ctx)
+      // canvas.width = width
+      // canvas.height = height
+      // var ctx = canvas.getContext("2d")
+      // console.log(ctx)
+      // // canvasに既に描画されている画像をクリア
+      // ctx.clearRect(0, 0, width, height)
+      // ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, height)
+      // console.log(canvas)
+      // console.log(ctx)
       // canvasからbase64画像データを取得
       var base64_url = canvas.toDataURL('image/png', 'image/jpeg')
       console.log(base64_url)
@@ -156,10 +156,13 @@ export default {
       console.log(blob)
       // this.imageURL = reader.result
       this.imageFile = blob
-      console.log(this.imageFile)
-      // this.imageFile = fd
       // console.log(this.imageFile)
-      this.imageName = event.target.files[0].name
+      // this.imageFile = fd
+      // canvasに表示されている画像を取得
+      // var canvas = document.getElementById('canvas');
+      // this.imageFile = canvas.toDataURL('image/png')
+      console.log(this.imageFile)
+      // this.imageName = event.target.files[0].name
       console.log(this.imageName)
       // firestoreに画像を保存するストレージオブジェクト作成
       const storageRef = firebase.storage().ref()
@@ -219,8 +222,8 @@ export default {
       }
     var file = null; // 選択されるファイル
     var blob = null; // 画像(BLOBデータ)
-    const THUMBNAIL_WIDTH = 500; // 画像リサイズ後の横の長さの最大値
-    const THUMBNAIL_HEIGHT = 500; // 画像リサイズ後の縦の長さの最大値
+    const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
+    const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
     // 画像をリサイズする
     var image = new Image();
     var reader = new FileReader();
@@ -267,7 +270,7 @@ export default {
       // previewに値が入ると<output>につけたv-ifがtrueと判定される
       // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
       this.preview = e.target.result
-      this.canvas = e.target.result
+      // this.canvas = e.target.result
       console.log(this.preview)
       this.imageName = event.target.files[0].name
       console.log(this.imageName)
@@ -276,6 +279,10 @@ export default {
     // ファイルを読み込む
     // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
     reader.readAsDataURL(event.target.files[0])
+    // canvasに表示されている画像を取得
+    // var canvas = document.getElementById('canvas');
+    // this.imageFile = canvas.toDataURL('image/png')
+    // console.log(this.imageFile)
     },
     reset () {
       this.preview = ''
