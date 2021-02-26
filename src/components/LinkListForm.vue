@@ -217,169 +217,66 @@ export default {
         this.reset()
         return false
       }
-      // ファイルリーダーを立ち上げる
-      const reader = new FileReader()
-      // reader.readAsDataURL(event.target.files[0])
-      reader.addEventListener('load', () => {
-        this.imageURL = reader.result
-        this.imageFile = event.target.files[0]
-        this.imageName = event.target.files[0].name
-        // console.log(this.preview)
-        // this.uploadPhoto()
-      })
-      // 画像が読み込まれたタイミングで実行される
-      reader.onload = e => {
-        // previewに読み込み結果（データURL）を代入する
-        // previewに値が入ると<output>につけたv-ifがtrueと判定される
-        // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
-        this.preview = e.target.result
-        console.log(this.preview)
-      }
-      // ファイルを読み込む
-      // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
-      reader.readAsDataURL(event.target.files[0])
-    },
-    // onFilePicked (event) {
-    //   // フォームでファイルが選択されたら実行される
-    //   console.log(event.target.files)
-    //   if (event.target.files.length === 0) {
-    //     console.log(event.target.files.length)
-    //     this.reset()
-    //     return false
-    //   }
-    //   // ファイルが画像でなかったら処理中断
-    //   if (!event.target.files[0].type.match('image/*')) {
-    //     console.log(event.target.files[0].type)
-    //     this.reset()
-    //     return false
-    //   }
-    //   // // 画像をリサイズする
-    //   // const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
-    //   // const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
-    //   // var blob = null // 画像blobデータ
-    //   // // ファイルリーダーを立ち上げる
-    //   // const reader = new FileReader()
-    //   // const image = new Image()
-    //   // reader.readAsDataURL(event.target.files[0])
-    //   // // ファイルリーダーを立ち上げる
-    //   // reader.addEventListener('load', () => {
-    //   //   this.imageURL = reader.result
-    //   //   this.imageFile = event.target.files[0]
-    //   //   this.imageName = event.target.files[0].name
-    //   //   // console.log(this.preview)
-    //   //   // this.uploadPhoto()
-    //   // })
-    //   // // 画像が読み込まれたタイミングで実行される
-    //   // reader.onload = e => {
-    //   //   // 画像をリサイズする
-    //   //   image.onload = function() {
-    //   //     var width, height;
-    //   //     if (image.width > image.height) {
-    //   //       // 横長の画像は横のサイズを指定値に合わせる
-    //   //       var ratio_w = image.height / image.width
-    //   //       width = THUMBNAIL_WIDTH
-    //   //       height = THUMBNAIL_HEIGHT * ratio_w
-    //   //     } else {
-    //   //       // 縦長の場合は縦のサイズを指定ちに合わせる
-    //   //       var ratio_h = image.width / image.height
-    //   //       width = THUMBNAIL_HEIGHT * ratio_h
-    //   //       height = THUMBNAIL_HEIGHT
-    //   //     }
-    //   //     // サムネ画像用canvasのサイズを上で算出した値に変更
-    //   //     var canvas = document.getElementById("canvas")
-    //   //     canvas.width = width
-    //   //     canvas.height = height
-    //   //     var ctx = canvas.getContext("2d")
-    //   //     // canvasに既に描画されている画像をクリア
-    //   //     ctx.clearRect(0, 0, width, height)
-    //   //     ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, height)
+    var file = null; // 選択されるファイル
+    var blob = null; // 画像(BLOBデータ)
+    const THUMBNAIL_WIDTH = 500; // 画像リサイズ後の横の長さの最大値
+    const THUMBNAIL_HEIGHT = 500; // 画像リサイズ後の縦の長さの最大値
+    // 画像をリサイズする
+    var image = new Image();
+    var reader = new FileReader();
+    reader.onload = e => {
+      image.onload = function() {
+        var width, height;
+        if(image.width > image.height){
+          // 横長の画像は横のサイズを指定値にあわせる
+          var ratio_w = image.height/image.width;
+          width = THUMBNAIL_WIDTH;
+          height = THUMBNAIL_WIDTH * ratio_w;
+        } else {
+          // 縦長の画像は縦のサイズを指定値にあわせる
+          var ratio_h = image.width/image.height;
+          width = THUMBNAIL_HEIGHT * ratio_h;
+          height = THUMBNAIL_HEIGHT;
+        }
+        // サムネ描画用canvasのサイズを上で算出した値に変更
+        var canvas = document.getElementById('canvas');
+        // canvas.width = width
+        // canvas.height = height
+        var ctx = canvas.getContext('2d');
+        // // canvasに既に描画されている画像をクリア
+        // ctx.clearRect(0,0,width,height);
+        // // canvasにサムネイルを描画
+        ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
 
-    //   //     // canvasからbase64画像データを取得
-    //   //     var base64_url = canvas.toDataURL('image/png', 'image/jpeg')
-    //   //     console.log(base64_url)
-    //   //     var base64 = window.btoa(base64_url)
-    //   //     // var base64 = ctx.getImageData(0, 0, width, height)
-    //   //     // base64からblobデータを作成
-    //   //     var barr, bin , i, len
-    //   //     console.log(typeof base64)
-    //   //     console.log(base64)
-    //   //     // var base64_s = String(base64).split('base64,')[1]
-    //   //     // console.log(base64_s)
-    //   //     bin = atob(btoa(base64))
-    //   //     len = bin.length
-    //   //     barr = new Uint8Array(len)
-    //   //     i = 0
-    //   //     while (i < len) {
-    //   //       barr[i] = bin.charCodeAt(i)
-    //   //       i++
-    //   //     }
-    //   //     blob = new Blob([barr], {type: 'image/png'}, {type: 'image/jpeg'})
-    //   //     console.log(blob)
-    //   //     this.imageURL = reader.result
-    //   //     // this.imageFile = fd
-    //   //     // console.log(this.imageFile)
-    //   //     // console.log(fd)
-    //   //     // this.imageFile = event.target.files[0]
-    //   //     this.imageFile = blob
-    //   //     console.log(this.imageFile)
-    //   //     // this.imageFile = fd
-    //   //     // console.log(this.imageFile)
-    //   //     this.imageName = event.target.files[0].name
-    //   //     console.log(this.imageName)
-    //   //     // firestoreに画像を保存するストレージオブジェクト作成
-    //   //     const storageRef = firebase.storage().ref()
-    //   //     // ファイルパス設定
-    //   //     // eslint-disable-next-line no-template-curly-in-string
-    //   //     const mountainRef = storageRef.child('linkEyeCatchImage/' + this.imageName)
-    //   //     // ファイルを適用してファイルアップロード
-    //   //     mountainRef.put(this.imageFile).then(snapshot => {
-    //   //       snapshot.ref.getDownloadURL().then(downloadURL => {
-    //   //         // this.imageURL = downloadURL
-    //   //         // console.log(this.imageURL)
-    //   //         // var link = {'photoURL': null}
-    //   //         // link.photoURL = downloadURL
-    //   //         // // firestore.collection('LinkPage').add({
-    //   //         // //   'photoURL': downloadURL
-    //   //         // // })
-    //   //         // console.log(link)
-    //   //         // // ステートを変更
-    //   //         // this.$store.dispatch('links/addLink', link)
-    //   //         // // 空に戻す
-    //   //         // this.link = this.emptyLink()
-    //   //         // this.preview = null
-    //   //       })
-    //   //     })
-    //   //   }
-    //     // image.src = e.target.result
-    //   // ファイルリーダーを立ち上げる
-    //   const reader = new FileReader()
-    //   reader.readAsDataURL(event.target.files[0])
-    //   reader.addEventListener('load', () => {
-    //     this.imageURL = reader.result
-    //     this.imageFile = event.target.files[0]
-    //     this.imageName = event.target.files[0].name
-    //     // console.log(this.preview)
-    //     // this.uploadPhoto()
-    //   })
-    //   // 画像が読み込まれたタイミングで実行される
-    //   reader.onload = e => {
-    //     // previewに読み込み結果（データURL）を代入する
-    //     // previewに値が入ると<output>につけたv-ifがtrueと判定される
-    //     // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
-    //     this.preview = e.target.result
-    //     console.log(this.preview)
-    //   }
-    //   // ファイルを読み込む
-    //   // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
-    //   reader.readAsDataURL(event.target.files[0])
-    //     // previewに読み込み結果（データURL）を代入する
-    //     // previewに値が入ると<output>につけたv-ifがtrueと判定される
-    //     // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
-    //     this.preview = e.target.result
-    //     console.log(this.preview)
-    //     this.imageName = event.target.files[0].name
-    //     console.log(this.imageName)
-    // },
+        // canvasからbase64画像データを取得
+        // var base64 = canvas.get(0).toDataURL('image/jpeg');
+        // // base64からBlobデータを作成
+        // var barr, bin, i, len;
+        // bin = atob(base64.split('base64,')[1]);
+        // len = bin.length;
+        // barr = new Uint8Array(len);
+        // i = 0;
+        // while (i < len) {
+        //   barr[i] = bin.charCodeAt(i);
+        //   i++;
+        // }
+        // blob = new Blob([barr], {type: 'image/jpeg'});
+        // console.log(blob);
+      }
+      // previewに読み込み結果（データURL）を代入する
+      // previewに値が入ると<output>につけたv-ifがtrueと判定される
+      // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
+      this.preview = e.target.result
+      this.canvas = e.target.result
+      console.log(this.preview)
+      this.imageName = event.target.files[0].name
+      console.log(this.imageName)
+      image.src = e.target.result;
+    }
+    // ファイルを読み込む
+    // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
+    reader.readAsDataURL(event.target.files[0])
+    },
     reset () {
       this.preview = ''
       this.$el.querySelector('input[type="file]').value = null
