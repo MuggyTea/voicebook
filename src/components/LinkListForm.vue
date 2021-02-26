@@ -134,17 +134,19 @@ export default {
       // console.log(canvas)
       // console.log(ctx)
       // canvasからbase64画像データを取得
-      var base64_url = canvas.toDataURL('image/png', 'image/jpeg')
+      var base64_url = canvas.toDataURL('image/jpeg')
       console.log(base64_url)
-      var base64 = window.btoa(base64_url)
+      // var base64 = window.btoa(base64_url)
       // var base64 = ctx.getImageData(0, 0, width, height)
       // base64からblobデータを作成
+      var base64 = String(base64_url).split('base64,')
       var barr, bin , i, len
       console.log(typeof base64)
       console.log(base64)
-      // var base64_s = String(base64).split('base64,')[1]
+      console.log(base64[1])
       // console.log(base64_s)
-      bin = atob(btoa(base64))
+      bin = atob(btoa(base64[1]))
+      bin = atob(base64[1])
       len = bin.length
       barr = new Uint8Array(len)
       i = 0
@@ -152,7 +154,7 @@ export default {
         barr[i] = bin.charCodeAt(i)
         i++
       }
-      blob = new Blob([barr], {type: 'image/png'}, {type: 'image/jpeg'})
+      blob = new Blob([barr], {type: 'image/jpeg'})
       console.log(blob)
       // this.imageURL = reader.result
       this.imageFile = blob
@@ -166,11 +168,15 @@ export default {
       console.log(this.imageName)
       // firestoreに画像を保存するストレージオブジェクト作成
       const storageRef = firebase.storage().ref()
+      // Create file metadata including the content type
+      var metadata = {
+        contentType: 'image/jpeg',
+      };
       // ファイルパス設定
       // eslint-disable-next-line no-template-curly-in-string
-      const mountainRef = storageRef.child('linkEyeCatchImage/' + this.imageName)
+      const mountainRef = storageRef.child('linkEyeCatchImage/' + this.imageName + '.jpeg')
       // ファイルを適用してファイルアップロード
-      mountainRef.put(this.imageFile).then(snapshot => {
+      mountainRef.put(this.imageFile, metadata).then(snapshot => {
         snapshot.ref.getDownloadURL().then(downloadURL => {
         this.imageURL = downloadURL
         console.log(this.imageURL)
