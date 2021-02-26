@@ -3,20 +3,17 @@
     <!-- <h1>{{ msg }}</h1> -->
     <h5>ユーザー名をタップするとユーザーページに飛ぶよ</h5>
     <h6>ログインして書き込んでみてね</h6>
-    <login />
     <index-list />
     <voice-recorder />
   </div>
 </template>
 
 <script>
-import Login from '../common/Login'
 import IndexList from '../IndexList'
 import VoiceRecorder from '../VoiceRecorder'
 export default {
   name: 'Index',
   components: {
-    'login': Login,
     'index-list': IndexList,
     'voice-recorder': VoiceRecorder
   },

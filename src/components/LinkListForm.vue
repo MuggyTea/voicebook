@@ -20,7 +20,7 @@
                         >
                 </output> -->
                 <v-card-actions>
-                  <v-btn color="primary" v-model.trim="link.voice_rec">
+                  <v-btn color="white" v-model.trim="link.voice_rec">
                     <voice-recorder></voice-recorder>
                   </v-btn>
                 </v-card-actions>
@@ -76,7 +76,9 @@ export default {
       dialog: false,
       imageName: null,
       imageURL: null,
-      imageFile: null
+      imageFile: null,
+      voiceData: null,
+      voiceObj: {}
     }
   },
   methods: {

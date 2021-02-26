@@ -1,8 +1,8 @@
 <template>
     <!-- <vue-record-audio @result="onResult" :mode="press" stream /> -->
     <div>
-  <v-btn @click="startRecording">録音開始</v-btn>
-  <v-btn @click="stopRecording">録音停止</v-btn>
+  <v-btn @click="startRecording" v-if="status=='ready'">録音開始</v-btn>
+  <v-btn @click="stopRecording" v-if="status=='recording'">録音停止</v-btn>
   <ul id="output"></ul>
   </div>
 </template>
@@ -12,50 +12,77 @@
 
 export default {
     name:"VoiceRecorder",
+    data () {
+      return {
+        status: 'ready',     // 状況
+        recorder: null,     // 音声にアクセスする "MediaRecorder" のインスタンス
+        audioData: [],      // 入力された音声データ
+        audioExtension: '',  // 音声ファイルの拡張子
+        output: null
+      }
+    },
   methods: {
-// 初期化 
+// 初期化
 initRecording() {
-  var audioContext
-  var recorder
-  // オーディオコンテキストの初期化
-  audioContext = new (window.AudioContext || window.webkitAudioContext)()
-
   // 音声入力の取得
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
-      // レコーダーの生成
-      var input = audioContext.createMediaStreamSource(stream)
-      audioContext.resume()
-      // recorder = new Recorder(input) 
+    console.log('録音するよ')
+    navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(stream => {
+      console.log('メディアストリーマー')
+      this.recorder = new MediaRecorder(stream);
+      console.log(this.recorder)
+      this.recorder.start();
+      this.recorder.addEventListener('dataavailable', e => {
+        console.log('録音中だよ')
+          this.audioData.push(e.data);
+          this.audioExtension = this.getExtension(e.data.type);
+          console.log(this.audioData)
+          console.log(this.audioExtension)
+
+      });
     })
+    this.recorder.addEventListener('stop', () => {
+      console.log('止めるよ')
+        const audioBlob = new Blob(this.audioData, { 'type' : 'audio/wav; codecs=0' });
+        const url = URL.createObjectURL(audioBlob);
+        console.log(audioBlob)
+        console.log(url)
+        var output = document.getElementById('output')
+        // 録音が終わったらオーディオタグを表示する
+        var au = document.createElement('audio')
+        au.controls = true
+        au.src = url
+        output.appendChild(au)
+        var br = document.createElement('br')
+        output.appendChild(br)
+        // LinkListFormにデータを渡す
+        
+    this.status = 'ready';
+
+    });
+  } else {
+    console.log('マイクがおんにならないよ')
   }
 },
 // 録音開始
-startRecording(button) {
-  var audioContext
-  var recorder
-  this.initRecording()
-  recorder && recorder.record()
+startRecording() {
+    this.status = 'recording';
+    this.initRecording()
+    this.audioData = [];
+    this.recorder.start();
+
 },
 // 録音停止
-stopRecording(button) {
-  var audioContext
-  var recorder
-  recorder && recorder.stop()
-   
-  // 音声認識
-  // audioRecognize()
-   
-   this.addAudioTag()
-  // レコーダーのクリア
-  recorder.clear()
+stopRecording() {
+  this.status = 'ready';
+  this.recorder.stop();
+  this.initRecording()
 },
 // オーディオタグの追加
 addAudioTag() {
+  var output = null
   // WAVのエクスポート
-  var recorder
-  var output
-  recorder && recorder.exportWAV(function(blob) {
+  this.recorder && this.recorder.exportWAV(function(blob) {
     // オーディオタグの追加
     var url = URL.createObjectURL(blob)
     var au = document.createElement('audio')
@@ -66,6 +93,22 @@ addAudioTag() {
     output.appendChild(br)
   })
 },
+// 音声ファイルの拡張子を取得する
+getExtension(audioType) {
+  console.log(audioType)
+    let extension = 'wav';
+    // const matches = audioType.match(/audio\/([^;]+)/);
+
+    // if(matches) {
+    //   console.log('マッチ')
+    //   console.log(matches)
+    //     extension = matches[1];
+
+    // }
+
+    return '.'+ extension;
+
+}
 // 音声認識
 // audioRecognize() {
 //   const audioContext
@@ -107,24 +150,27 @@ addAudioTag() {
 //   })
 // },
 // ArrayBuffer → Base64
-arrayBufferToBase64(buffer) {
-  var audioContext
-  var recorder
-  let binary = ''
-  let bytes = new Float32Array(buffer)
-  let len = bytes.byteLength
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i])
-  }
-  return window.btoa(binary)
-},
-      callback (msg) {
-          console.log("Event: ", msg)
-      },
-    onResult (data) {
-      console.log('The blob data:', data);
-      console.log('Downloadable audio', window.URL.createObjectURL(data));
-    }
-  }
+// arrayBufferToBase64(buffer) {
+//   var audioContext
+//   var recorder
+//   let binary = ''
+//   let bytes = new Float32Array(buffer)
+//   let len = bytes.byteLength
+//   for (let i = 0; i < len; i++) {
+//     binary += String.fromCharCode(bytes[i])
+//   }
+//   return window.btoa(binary)
+//       callback (msg) {
+//           console.log("Event: ", msg)
+//       },
+//     onResult (data) {
+//       console.log('The blob data:', data);
+//       console.log('Downloadable audio', window.URL.createObjectURL(data));
+//     }
+//   },
+  // mounted() {
+  //   this.initRecording()
+  // },
+}
 }
 </script>
