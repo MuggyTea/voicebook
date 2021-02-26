@@ -20,28 +20,30 @@
                         >
                 </output>
                 <v-card-actions>
-                <v-btn color="primary" v-model.trim="link.voice_rec">
-                  <voice-recorder></voice-recorder>
-                </v-btn>
-                    <v-spacer></v-spacer>
-                <v-btn color="primary"
-                label="Select Image"
-                @click="pickFile"
-                v-model="imageName"
-                prepend-icon="attach_file"
-                >
-                アイキャッチ画像
-                <input
-                type="file"
-                style="display: none"
-                ref="image"
-                accept="image/*"
-                @change="onFilePicked"
-                />
-                </v-btn>
+                  <v-btn color="primary" v-model.trim="link.voice_rec">
+                    <voice-recorder></voice-recorder>
+                  </v-btn>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                    <v-btn color="primary"
+                    label="Select Image"
+                    @click="pickFile"
+                    v-model="imageName"
+                    prepend-icon="attach_file"
+                    >
+                      アイキャッチ画像
+                      <input
+                      type="file"
+                      style="display: none"
+                      ref="image"
+                      accept="image/*"
+                      @change="onFilePicked"
+                      />
+                    </v-btn>
                 </v-card-actions>
         <div class="card-footer text-right">
-            <button class="btn-sm btn-secondary" type="submit" v-on:click.prevent="addLink">add</button>
+            <button class="btn-sm btn-secondary" type="submit" v-on:click.prevent="addLink">投稿</button>
         </div>
         </v-card>
     </div>
@@ -138,8 +140,12 @@ export default {
         this.reset()
         return false
       }
+      // 画像をリサイズする
+      const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
+      const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
       // ファイルリーダーを立ち上げる
       const reader = new FileReader()
+      const image = new Image()
       reader.readAsDataURL(event.target.files[0])
       reader.addEventListener('load', () => {
         this.imageURL = reader.result
@@ -150,6 +156,21 @@ export default {
       })
       // 画像が読み込まれたタイミングで実行される
       reader.onload = e => {
+        // 画像をリサイズする
+        image.onload = function() {
+          const width, height;
+          if (image.width > image.height) {
+            // 横長の画像は横のサイズを指定値に合わせる
+            var ratio = image.height / image.width
+            width = THUMBNAIL_WIDTH
+            height = THUMBNAIL_HEIGHT * ratio
+          } else {
+            // 縦長の場合は縦のサイズを指定ちに合わせる
+            var ratio = image.width / image.height
+            width = THUMBNAIL_HEIGHT * ratio
+            height = THUMBNAIL_HEIGHT
+          }
+        }
         // previewに読み込み結果（データURL）を代入する
         // previewに値が入ると<output>につけたv-ifがtrueと判定される
         // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
