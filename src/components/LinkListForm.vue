@@ -20,6 +20,9 @@
                         >
                 </output>
                 <v-card-actions>
+                <v-btn color="primary" v-model.trim="link.voice_rec">
+                  <voice-recorder></voice-recorder>
+                </v-btn>
                     <v-spacer></v-spacer>
                 <v-btn color="primary"
                 label="Select Image"
@@ -47,11 +50,13 @@
 import CONSTANTS from './constants'
 // import PhotoUpload from './PhotoUpload'
 import firebase from 'firebase'
+import VoiceRecorder from '../components/VoiceRecorder'
 // import firestore from '../plugins/firebase'
 
 export default {
   name: 'LinkListForm',
   components: {
+    'voice-recorder': VoiceRecorder
     // PhotoUpload
   },
   data () {

@@ -8,7 +8,8 @@ import VueRouter from 'vue-router'
 import LinkList from '../components/pages/LinkList'
 import LinkPage from '../components/pages/LinkPage'
 import NotFound from '../components/pages/NotFound'
-import MarkDownPanel from '../components/MarkDownPanel'
+import PrivacyPolicy from '../components/pages/PrivacyPolicy'
+import TermsOfService from '../components/pages/TermsOfService'
 import Index from '../components/pages/Index'
 
 // VueRouterプラグインを使用する
@@ -43,8 +44,22 @@ const routes = [{
         component: NotFound
     },
     {
-        path: '/panel',
-        component: MarkDownPanel
+        path: '/404',
+        component: NotFound
+    },
+    {
+        name: 'TermsOfService',
+        path: '/a/info/service',
+        component: TermsOfService
+    },
+    {
+        name: 'PrivacyPolicy',
+        path: '/a/info/privacy-policy',
+        component: PrivacyPolicy
+    },
+    {
+        path: '*',
+        redirect: '/404'
     }
 ]
 

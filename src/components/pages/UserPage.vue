@@ -1,51 +1,38 @@
 <template>
-  <div class="link-list">
+  <div class="twigene-list">
     <user-profile
     v-bind:user_profile="screen_name"
      />
     <v-card>
       <v-container fluid grid-list-md>
-        <v-layout row wrap justify-content-center>
-          <link-list-form></link-list-form>
-            <link-list-card v-for="(link, index) in links" v-bind:key="index" v-bind:link="link"></link-list-card>
+        <v-layout row wrap>
+          <!-- <h1>Index</h1> -->
+          <div class="row justify-content-center">
+            <twigene-card v-for="(twigene, index) in tweets" v-bind:key="index" v-bind:twigene="twigene"></twigene-card>
+          </div>
         </v-layout>
       </v-container>
     </v-card>
-    <div class="row__test__delete">
+    <!-- <div class="row__test__delete">
       <button
         class="btn-sm btn-dark m-1"
         v-for="(link, index) in links"
         v-bind:key="index"
         v-on:click="remove(link.id)"
       >{{ index }}</button>
-    </div>
-    <!-- <div class="grid">
-            <link-photo
-                class="grid__item"
-                v-for="link_list in link_lists"
-                :key="link_list.user_id"
-                :item="link_list"
-            />
-            <one-link></one-link>
-    </div>-->
+    </div> -->
   </div>
 </template>
 
 <script>
-// import LinkPhoto from '../LinkPhoto'
-// import OneLink from '../OneLink'
-import LinkListCard from '../LinkListCard'
-import LinkListForm from '../LinkListForm'
 import UserProfile from '../UserProfile'
+import TwigeneCard from '../TwigeneCard'
 
 export default {
-  name: 'LinkList',
+  name: 'UserPage',
   components: {
-    // 'link-photo': LinkPhoto,
-    // 'one-link': OneLink,
-    'link-list-card': LinkListCard,
-    'link-list-form': LinkListForm,
-    'user-profile': UserProfile
+    'user-profile': UserProfile,
+    'twigene-card': TwigeneCard
   },
   // data () {
   //   return {
@@ -78,18 +65,18 @@ export default {
   methods: {
     init () {
       console.log('メモを検索する')
-      this.$store.dispatch('links/clear')
+      this.$store.dispatch('tweets/clear')
     },
     start (screenName) {
       console.log(screenName)
-      this.$store.dispatch('links/startListener', {screenName})
+      this.$store.dispatch('tweets/startListener', {screenName})
     },
     stop () {
-      this.$store.dispatch('links/stopListener')
+      this.$store.dispatch('tweets/stopListener')
     },
     remove (id) {
-      console.log(this.$store.dispatch('links/deleteLink', {id}))
-      this.$store.dispatch('links/deleteLink', {id})
+      console.log(this.$store.dispatch('tweets/deleteLink', {id}))
+      this.$store.dispatch('tweets/deleteLink', {id})
     },
     getUser (userProfile) {
       this.$store.dispatch('user/userData', {screen_name: userProfile})
@@ -107,9 +94,9 @@ export default {
       console.log('ログイン判定取得')
       return this.$store.getters['auth/check']
     },
-    links () {
+    tweets () {
       console.log('getter')
-      return this.$store.getters['links/data']
+      return this.$store.getters['tweets/data']
     },
     userdata () {
       return this.$store.getters['user/userProfile']

@@ -25,7 +25,9 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import vuetify from './plugins/vuetify';
+import vuetify from './plugins/vuetify'
+// import VueRecord from '@codekraft-studio/vue-record'
+// import VueAudioRecorder from 'vue-audio-recorder'
 
 library.add(fas, fab, far)
 Vue.component('font-awesome-icon', FontAwesomeIcon)

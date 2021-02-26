@@ -1,8 +1,8 @@
 <template>
   <v-card flat tile>
-    <v-toolbar color="primary">
+    <v-toolbar class="indigo darken-1 grey--text">
       <router-link to="/">
-        <v-toolbar-title>こえろぐ - VoiceBook -</v-toolbar-title>
+        <v-toolbar-title><strong>こえろぐ - VoiceBook -</strong></v-toolbar-title>
         <!-- <v-toolbar-title>Index</v-toolbar-title> -->
       </router-link>
       <v-spacer></v-spacer>

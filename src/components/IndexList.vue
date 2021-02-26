@@ -5,7 +5,7 @@
         <v-layout row wrap>
           <!-- <h1>Index</h1> -->
           <div class="row justify-content-center">
-            <PhotoUpload />
+            <!-- <PhotoUpload /> -->
             <link-list-form></link-list-form>
             <link-list-card v-for="(link, index) in alllinks" v-bind:key="index" v-bind:link="link"></link-list-card>
           </div>
@@ -34,20 +34,22 @@
 </template>
 
 <script>
-import LinkPhoto from '../components/LinkPhoto'
-import OneLink from '../components/OneLink'
+// import LinkPhoto from '../components/LinkPhoto'
+// import OneLink from '../components/OneLink'
 import LinkListCard from '../components/LinkListCard'
 import LinkListForm from '../components/LinkListForm'
-import UserProfile from '../components/UserProfile'
+// import AudioRecorder from '../components/AudioRecorder'
+// import UserProfile from '../components/UserProfile'
 
 export default {
   name: 'IndexList',
   components: {
-    'link-photo': LinkPhoto,
-    'one-link': OneLink,
+    // 'link-photo': LinkPhoto,
+    // 'one-link': OneLink,
     'link-list-card': LinkListCard,
     'link-list-form': LinkListForm,
-    'user-profile': UserProfile
+    // 'audio-recorder': AudioRecorder
+    // 'user-profile': UserProfile
   },
   data () {
     return {
