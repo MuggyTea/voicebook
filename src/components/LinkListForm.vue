@@ -249,7 +249,7 @@ export default {
         // ctx.clearRect(0,0,width,height);
         // // canvasにサムネイルを描画
         // ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
-        ctx.drawImage(image,0,0,image.width, image.height);
+        ctx.drawImage(image,0,0,image.width, image.height, 0, 0, width, height);
       }
       // previewに読み込み結果（データURL）を代入する
       // previewに値が入ると<output>につけたv-ifがtrueと判定される

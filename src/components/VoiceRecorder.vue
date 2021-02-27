@@ -63,7 +63,7 @@ initRecording() {
             fr.onload = eve => {
               console.log(fr.result)
               // String(fr.result).split('base64,')
-              this.mp3array = new Int16Array(fr.result);
+              this.mp3array = new Int8Array(fr.result);
               // this.mp3array = new Int16Array(44100);
               // var a = fr.readAsArrayBuffer(e.data[0])
               // console.log(a)
