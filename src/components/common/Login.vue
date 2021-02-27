@@ -34,6 +34,7 @@ export default {
       try {
         this.processing = true
         this.$store.dispatch('auth/login')
+        location.reload()
       } catch (e) {
         this.processing = false
       } finally {
@@ -43,6 +44,7 @@ export default {
     signOut: function () {
       this.$store.dispatch('auth/logout')
       this.$router.push('/')
+      location.reload()
     }
   },
   // computedには結果がキャッシュされる
