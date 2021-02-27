@@ -12,15 +12,6 @@
         </v-layout>
       </v-container>
     </v-card>
-    <div class="row__test__delete">
-      <button
-        class="btn-sm btn-dark m-1"
-        v-for="(link, index) in alllinks"
-        v-bind:key="index"
-        v-on:click="remove(link.id)"
-      >{{ index }}
-      </button>
-    </div>
     <!-- <div class="grid">
             <link-photo
                 class="grid__item"

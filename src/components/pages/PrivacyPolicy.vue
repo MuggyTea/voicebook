@@ -88,7 +88,7 @@
 <h2>第10条（お問い合わせ窓口）</h2>
 <p>本ポリシーに関するお問い合わせは，下記の窓口までお願いいたします。</p>
 <p>
-Eメールアドレス：mo9.lidmg@gmail.com</p>
+Email address：Muggytea.nf@gmail.com</p>
 
 <p class="tR">以上</p>
 

@@ -35,7 +35,7 @@
     text
     rounded
     class="footer__col1"
-    href="https://forms.gle/euY2WbdRziXjFSUk9"
+    href="https://forms.gle/L1TpqXjgTygmaYsr6"
     >
     お問い合わせ
     </v-btn>

@@ -77,7 +77,11 @@
           <v-card-actions class="card__actions">
             <!-- 削除機能 -->
             <v-btn text
-              v-if="link.screenName == userinfo.screenName"
+              v-if="!userinfo"
+              >
+            </v-btn>
+            <v-btn text
+              v-else-if="link.screenName === userinfo.screenName"
               v-on:click="remove(link.id)">
               <font-awesome-icon :icon="['fas', 'trash-alt']">
               </font-awesome-icon>
