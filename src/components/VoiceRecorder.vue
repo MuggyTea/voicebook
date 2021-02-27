@@ -9,6 +9,7 @@
 
 <script>
 // import Recorder from "../plugins/recorder"
+import lamejs from "linejs"
 
 export default {
     name:"VoiceRecorder",
@@ -18,7 +19,9 @@ export default {
         recorder: null,     // 音声にアクセスする "MediaRecorder" のインスタンス
         audioData: [],      // 入力された音声データ
         audioExtension: '',  // 音声ファイルの拡張子
-        output: null
+        output: null,
+        mp3Data: [],
+        mp3array: null
       }
     },
   methods: {
@@ -34,32 +37,92 @@ initRecording() {
       this.recorder.start();
       this.recorder.addEventListener('dataavailable', e => {
         console.log('録音中だよ')
-          this.audioData.push(e.data);
-          this.audioExtension = this.getExtension(e.data.type);
-          console.log(this.audioData)
-          console.log(this.audioExtension)
+        // オーディオデータを格納
+        this.audioData.push(e.data);
+        this.audioExtension = this.getExtension(e.data.type);
+        console.log(this.audioData)
+        console.log(this.audioExtension)
 
+        // ストップが押されたとき
+        this.recorder.addEventListener('stop', () => {
+          console.log('止めるよ')
+          // mp3に変換の準備
+          var channels = 2; //1 for mono or 2 for stereo
+          var sampleRate = 44100; //44.1khz (normal mp3 samplerate)
+          var kbps = 128; //encode 128kbps mp3
+          var lamejs = require('lamejs')
+          var mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, kbps);
+
+          // samples = new Int16Array(44100); //one second of silence (get your data from the sourceyou have)
+          console.log(this.audioData)
+          console.log(typeof this.audioData)
+          console.log(e.data)
+          // blobのe.dataをarraydataURLに変換する
+          var fr = new FileReader()
+          new Promise((resolve, reject) => {
+            fr.onload = eve => {
+              console.log(fr.result)
+              String(fr.result).split('base64,')
+              this.mp3array = new Int16Array(fr.result);
+              // var a = fr.readAsArrayBuffer(e.data[0])
+              // console.log(a)
+              console.log(b)
+                //one second of silence (get your data from the sourceyou have)
+              console.log(this.mp3array)
+              console.log(typeof this.mp3array)
+              // var sampleBlockSize = 10000; //can be anything but make it a multiple of 576 to make encoders life easier
+              // for (var i = 0; i < new Int16Array(this.mp3array.bytelength).length; i += sampleBlockSize) {
+              //   var sampleChunk = this.mp3array.subarray(i, i + sampleBlockSize);
+              for (var i = 0; i < this.mp3array.bytelength;) {
+                var sampleChunk = this.mp3array.subarray(i);
+                var mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+                if (mp3buf.length > 0) {
+                  this.mp3Data.push(mp3buf);
+                }
+              }
+              mp3buf = mp3encoder.flush();   //finish writing mp3
+              console.log(mp3buf)
+
+              if (mp3buf.length > 0) {
+                console.log(mp3buf)
+              this.mp3Data.push(new Int8Array(mp3buf));
+              }
+              console.log(this.mp3Data)
+              console.log(typeof mp3Data)
+              // const audioBlob = new Blob(this.audioData, { 'type' : 'audio/wav' });
+              var audioBlob = new Blob(this.mp3Data, { 'type' : 'audio/mp3' });
+              const url = URL.createObjectURL(audioBlob);
+              console.log(audioBlob)
+              console.log(url)
+              var output = document.getElementById('output')
+              // 録音が終わったらオーディオタグを表示する
+              var au = document.createElement('audio')
+              au.controls = true
+              au.src = url
+              au.setAttribute('type', 'audio/mp3')
+              output.appendChild(au)
+              var br = document.createElement('br')
+              output.appendChild(br)
+              let a = document.createElement('a');
+              a.href = url;
+              a.download = Math.floor(Date.now() / 1000) + this.audioExtension;
+              document.body.appendChild(a);
+              a.click();
+              // LinkListFormにデータを渡す
+              this.$emit('audioData', audioBlob, url)
+              this.status = 'ready';
+            }
+            fr.onerror = eve => {
+              console.log(fr.error)
+            }
+          })
+          var b = fr.readAsArrayBuffer(e.data)
+          // var b = fr.readAsDataURL(e.data)
+          console.log(this.mp3Data)
+
+        });
       });
     })
-    this.recorder.addEventListener('stop', () => {
-      console.log('止めるよ')
-        const audioBlob = new Blob(this.audioData, { 'type' : 'audio/wav; codecs=0' });
-        const url = URL.createObjectURL(audioBlob);
-        console.log(audioBlob)
-        console.log(url)
-        var output = document.getElementById('output')
-        // 録音が終わったらオーディオタグを表示する
-        var au = document.createElement('audio')
-        au.controls = true
-        au.src = url
-        output.appendChild(au)
-        var br = document.createElement('br')
-        output.appendChild(br)
-        // LinkListFormにデータを渡す
-        this.$emit('audioData', audioBlob, url)
-    this.status = 'ready';
-
-    });
   } else {
     console.log('マイクがおんにならないよ')
   }
@@ -96,7 +159,7 @@ addAudioTag() {
 // 音声ファイルの拡張子を取得する
 getExtension(audioType) {
   console.log(audioType)
-    let extension = 'wav';
+    let extension = 'mp3';
     // const matches = audioType.match(/audio\/([^;]+)/);
 
     // if(matches) {

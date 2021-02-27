@@ -82,7 +82,10 @@ export default {
       console.log(this.voiceUrl)
     },
     addLink () {
-      if (!this.link.link_title || !this.link.description) {
+      // if (!this.link.link_title && !this.link.description && !this.voiceUrl) {
+      if (!this.voiceUrl) {
+        console.log('何も入ってない')
+        alert('音声を投稿してね')
         return
       }
       console.log('add new Link')
@@ -100,18 +103,19 @@ export default {
       if (!this.voiceUrl) {
         console.log(this.link)
         console.log('音声なし')
-        // ステートを変更
-        this.$store.dispatch('links/addLink', this.link)
-        // 空に戻す
-        this.link = this.emptyLink()
+        // // ステートを変更
+        // this.$store.dispatch('links/addLink', this.link)
+        // // 空に戻す
+        // this.link = this.emptyLink()
+        return
       }
       // 音声データを格納する
       // firestoreに画像を保存するストレージオブジェクト作成
       const storageRef = firebase.storage().ref()
-      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.wav')
+      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.mp3')
       // Create file metadata including the content type
       var metadata_a = {
-        contentType: 'audio/wav',
+        contentType: 'audio/mp3',
       };
       // ファイルを適用してファイルアップロード
       mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
@@ -120,11 +124,6 @@ export default {
         console.log(this.voiceStrageUrl)
         this.link.voiceURL = downloadURL
         console.log(this.link)
-        // ステートを変更
-        this.$store.dispatch('links/addLink', this.link)
-        // 空に戻す
-        this.link = this.emptyLink()
-        this.preview = null
         })
       })
       if (!this.imageName) {
@@ -186,6 +185,10 @@ export default {
         })
       })
       // ステートを変更
+      this.$store.dispatch('links/addLink', this.link)
+      // 空に戻す
+      this.link = this.emptyLink()
+      this.preview = null
       console.log(this.imageFile)
       console.log(typeof this.imageFile)
       console.log(this.imageName)
@@ -242,22 +245,8 @@ export default {
         // // canvasに既に描画されている画像をクリア
         // ctx.clearRect(0,0,width,height);
         // // canvasにサムネイルを描画
-        ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
-
-        // canvasからbase64画像データを取得
-        // var base64 = canvas.get(0).toDataURL('image/jpeg');
-        // // base64からBlobデータを作成
-        // var barr, bin, i, len;
-        // bin = atob(base64.split('base64,')[1]);
-        // len = bin.length;
-        // barr = new Uint8Array(len);
-        // i = 0;
-        // while (i < len) {
-        //   barr[i] = bin.charCodeAt(i);
-        //   i++;
-        // }
-        // blob = new Blob([barr], {type: 'image/jpeg'});
-        // console.log(blob);
+        // ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
+        ctx.drawImage(image,0,0,image.width);
       }
       // previewに読み込み結果（データURL）を代入する
       // previewに値が入ると<output>につけたv-ifがtrueと判定される
@@ -272,10 +261,6 @@ export default {
     // ファイルを読み込む
     // 読み込まれたファイルはデータURL形式で受け取れる（上記onload参照）
     reader.readAsDataURL(event.target.files[0])
-    // canvasに表示されている画像を取得
-    // var canvas = document.getElementById('canvas');
-    // this.imageFile = canvas.toDataURL('image/png')
-    // console.log(this.imageFile)
     },
     reset () {
       this.preview = ''
