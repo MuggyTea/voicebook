@@ -1,21 +1,18 @@
 <template>
   <div class="hello">
     <!-- <h1>{{ msg }}</h1> -->
-    <h5>ユーザー名をタップするとユーザーページに飛ぶよ</h5>
-    <h6>ログインして書き込んでみてね</h6>
+    <h5>ログインして自分の声や演奏を投稿してみよう！</h5>
+    <h6>一度投稿した音声の後ろに追加したり、重ねて録音できます。どんどん音声を増やしてボイス日記を付けたり、楽器や歌を重ねて多重録音してみよう！</h6>
     <index-list />
-    <voice-recorder />
   </div>
 </template>
 
 <script>
 import IndexList from '../IndexList'
-import VoiceRecorder from '../VoiceRecorder'
 export default {
   name: 'Index',
   components: {
-    'index-list': IndexList,
-    'voice-recorder': VoiceRecorder
+    'index-list': IndexList
   },
   computed: {
     userinfo () {

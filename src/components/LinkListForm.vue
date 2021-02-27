@@ -95,13 +95,46 @@ export default {
       this.link.screenName = this.userinfo.screenName
       this.link.uid = this.userinfo.uid
       this.link.id_str = this.userinfo.id_str
-      if (!this.imageName) {
+      console.log(this.voiceBlob)
+      console.log(this.voiceUrl)
+      if (!this.voiceUrl) {
         console.log(this.link)
-        console.log('から')
+        console.log('音声なし')
         // ステートを変更
         this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
         this.link = this.emptyLink()
+      }
+      // 音声データを格納する
+      // firestoreに画像を保存するストレージオブジェクト作成
+      const storageRef = firebase.storage().ref()
+      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.wav')
+      // Create file metadata including the content type
+      var metadata_a = {
+        contentType: 'audio/wav',
+      };
+      // ファイルを適用してファイルアップロード
+      mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
+        snapshot.ref.getDownloadURL().then(downloadURL => {
+        this.voiceStrageUrl = downloadURL
+        console.log(this.voiceStrageUrl)
+        this.link.voiceURL = downloadURL
+        console.log(this.link)
+        // ステートを変更
+        this.$store.dispatch('links/addLink', this.link)
+        // 空に戻す
+        this.link = this.emptyLink()
+        this.preview = null
+        })
+      })
+      if (!this.imageName) {
+        console.log(this.link)
+        console.log('から')
+        return
+        // ステートを変更
+        // this.$store.dispatch('links/addLink', this.link)
+        // 空に戻す
+        // this.link = this.emptyLink()
       }
       var blob = null // 画像blobデータ
       // // サムネ画像用canvasのサイズを上で算出した値に変更
@@ -131,8 +164,6 @@ export default {
       this.imageFile = blob
       console.log(this.imageFile)
       console.log(this.imageName)
-      // firestoreに画像を保存するストレージオブジェクト作成
-      const storageRef = firebase.storage().ref()
       // Create file metadata including the content type
       var metadata = {
         contentType: 'image/jpeg',
@@ -152,28 +183,6 @@ export default {
         // // 空に戻す
         // this.link = this.emptyLink()
         // this.preview = null
-        })
-      })
-      console.log(this.voiceBlob)
-      console.log(this.voiceUrl)
-      // 音声データを格納する
-      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.wav')
-      // Create file metadata including the content type
-      var metadata_a = {
-        contentType: 'audio/wav',
-      };
-      // ファイルを適用してファイルアップロード
-      mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
-        snapshot.ref.getDownloadURL().then(downloadURL => {
-        this.voiceStrageUrl = downloadURL
-        console.log(this.voiceStrageUrl)
-        this.link.voiceURL = downloadURL
-        console.log(this.link)
-        // ステートを変更
-        this.$store.dispatch('links/addLink', this.link)
-        // 空に戻す
-        this.link = this.emptyLink()
-        this.preview = null
         })
       })
       // ステートを変更
