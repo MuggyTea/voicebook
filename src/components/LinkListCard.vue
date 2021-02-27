@@ -64,7 +64,7 @@
           </v-btn>
           </v-img>
           </router-link>
-          <audio controls :src="link.voiceURL"></audio>
+          <audio controls :src="formatedAudio"></audio>
           <router-link v-bind:to="{name: 'LinkPage',
             params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }">
           <v-card-title class="card__title">
@@ -142,6 +142,12 @@ export default {
         return ''
       }
       return this.getOmissionAndPlusMidpoint(this.link.description, 60)
+    },
+    formatedAudio () {
+      if (!this.link || !this.link.description || !this.link.voiceURL) {
+        return ''
+      }
+      return this.link.voiceURL
     }
   },
   watch: {

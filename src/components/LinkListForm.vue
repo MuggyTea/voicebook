@@ -109,27 +109,14 @@ export default {
         // this.link = this.emptyLink()
         return
       }
-      // 音声データを格納する
+
+      // DB登録の準備
       // firestoreに画像を保存するストレージオブジェクト作成
       const storageRef = firebase.storage().ref()
-      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.mp3')
-      // Create file metadata including the content type
-      var metadata_a = {
-        contentType: 'audio/mp3',
-      };
-      // ファイルを適用してファイルアップロード
-      mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
-        snapshot.ref.getDownloadURL().then(downloadURL => {
-        this.voiceStrageUrl = downloadURL
-        console.log(this.voiceStrageUrl)
-        this.link.voiceURL = downloadURL
-        console.log(this.link)
-        })
-      })
+      // アイキャッチデータをアップロードする
       if (!this.imageName) {
         console.log(this.link)
         console.log('から')
-        return
         // ステートを変更
         // this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
@@ -177,22 +164,38 @@ export default {
         console.log(this.imageURL)
         this.link.photoURL = downloadURL
         console.log(this.link)
-        // ステートを変更
-        // this.$store.dispatch('links/addLink', this.link)
-        // // 空に戻す
-        // this.link = this.emptyLink()
-        // this.preview = null
         })
       })
-      // ステートを変更
-      this.$store.dispatch('links/addLink', this.link)
+
+      // 音声データをアップロードする
+      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.mp3')
+      // Create file metadata including the content type
+      var metadata_a = {
+        contentType: 'audio/mp3',
+      };
+      // ファイルを適用してファイルアップロード
+      mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
+        snapshot.ref.getDownloadURL().then(downloadURL => {
+        this.voiceStrageUrl = downloadURL
+        console.log(this.voiceStrageUrl)
+        this.link.voiceURL = downloadURL
+        console.log(this.link)
+        // ステートを変更
+        this.$store.dispatch('links/addLink', this.link)
+        // 空に戻す
+        this.link = this.emptyLink()
+        this.preview = null
+        })
+      })
       // 空に戻す
-      this.link = this.emptyLink()
-      this.preview = null
+      // this.link = this.emptyLink()
+      // this.preview = null
       console.log(this.imageFile)
       console.log(typeof this.imageFile)
       console.log(this.imageName)
       console.log(String(this.imageName))
+      console.log(this.voiceStrageUrl)
+      console.log(this.voiceUrl)
       console.log(this.voiceStrageUrl)
     },
     emptyLink () {
@@ -246,7 +249,7 @@ export default {
         // ctx.clearRect(0,0,width,height);
         // // canvasにサムネイルを描画
         // ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
-        ctx.drawImage(image,0,0,image.width);
+        ctx.drawImage(image,0,0,image.width, image.height);
       }
       // previewに読み込み結果（データURL）を代入する
       // previewに値が入ると<output>につけたv-ifがtrueと判定される

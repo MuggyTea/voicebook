@@ -47,7 +47,7 @@ initRecording() {
         this.recorder.addEventListener('stop', () => {
           console.log('止めるよ')
           // mp3に変換の準備
-          var channels = 2; //1 for mono or 2 for stereo
+          var channels = 1; //1 for mono or 2 for stereo
           var sampleRate = 44100; //44.1khz (normal mp3 samplerate)
           var kbps = 128; //encode 128kbps mp3
           var lamejs = require('lamejs')
@@ -62,24 +62,39 @@ initRecording() {
           new Promise((resolve, reject) => {
             fr.onload = eve => {
               console.log(fr.result)
-              String(fr.result).split('base64,')
+              // String(fr.result).split('base64,')
               this.mp3array = new Int16Array(fr.result);
+              // this.mp3array = new Int16Array(44100);
               // var a = fr.readAsArrayBuffer(e.data[0])
               // console.log(a)
               console.log(b)
                 //one second of silence (get your data from the sourceyou have)
               console.log(this.mp3array)
               console.log(typeof this.mp3array)
-              // var sampleBlockSize = 10000; //can be anything but make it a multiple of 576 to make encoders life easier
-              // for (var i = 0; i < new Int16Array(this.mp3array.bytelength).length; i += sampleBlockSize) {
-              //   var sampleChunk = this.mp3array.subarray(i, i + sampleBlockSize);
-              for (var i = 0; i < this.mp3array.bytelength;) {
-                var sampleChunk = this.mp3array.subarray(i);
+              console.log(this.mp3array.length)
+              var mp3array_len = this.mp3array.length
+              console.log(mp3array_len)
+              var sampleBlockSize = 576; //can be anything but make it a multiple of 576 to make encoders life easier
+              // for (var i = 0; i < mp3array_len; i += sampleBlockSize) {
+              for (var i = 0; i < mp3array_len;) {
+                // console.log(i)
+                // var sampleChunk = this.mp3array.subarray(i);
+                // console.log('ああああ')
+                var sampleChunk = this.mp3array.subarray(i, i + sampleBlockSize);
+                // var sampleChunk = this.mp3array.subarray(i);
+                // console.log(sampleChunk)
+                // console.log(mp3encoder)
                 var mp3buf = mp3encoder.encodeBuffer(sampleChunk);
+                // console.log('ええええええ')
+                // console.log(mp3buf)
+                // console.log(mp3buf.length)
                 if (mp3buf.length > 0) {
                   this.mp3Data.push(mp3buf);
                 }
+                i++
               }
+              console.log(mp3encoder)
+              console.log(mp3buf)
               mp3buf = mp3encoder.flush();   //finish writing mp3
               console.log(mp3buf)
 
