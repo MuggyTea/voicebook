@@ -11,23 +11,6 @@
         </v-layout>
       </v-container>
     </v-card>
-    <div class="row__test__delete">
-      <button
-        class="btn-sm btn-dark m-1"
-        v-for="(link, index) in links"
-        v-bind:key="index"
-        v-on:click="remove(link.id)"
-      >{{ index }}</button>
-    </div>
-    <!-- <div class="grid">
-            <link-photo
-                class="grid__item"
-                v-for="link_list in link_lists"
-                :key="link_list.user_id"
-                :item="link_list"
-            />
-            <one-link></one-link>
-    </div>-->
   </div>
 </template>
 
@@ -86,10 +69,6 @@ export default {
     },
     stop () {
       this.$store.dispatch('links/stopListener')
-    },
-    remove (id) {
-      console.log(this.$store.dispatch('links/deleteLink', {id}))
-      this.$store.dispatch('links/deleteLink', {id})
     },
     getUser (userProfile) {
       this.$store.dispatch('user/userData', {screen_name: userProfile})

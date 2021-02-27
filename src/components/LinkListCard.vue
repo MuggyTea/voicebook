@@ -75,6 +75,13 @@
                 <h6 class="grey--text">{{ formatedDescription }}</h6>
               </v-card-text>
           <v-card-actions class="card__actions">
+            <!-- 削除機能 -->
+            <v-btn text
+              v-if="link.screenName == userinfo.screenName"
+              v-on:click="remove(link.id)">
+              <font-awesome-icon :icon="['fas', 'trash-alt']">
+              </font-awesome-icon>
+            </v-btn>
             <v-spacer></v-spacer>
             <v-btn text>
               <font-awesome-icon :icon="['fas', 'heart']" />
@@ -113,6 +120,10 @@ export default {
     }
   },
   methods: {
+    remove (id) {
+      console.log(this.$store.dispatch('links/deleteLink', {id}))
+      this.$store.dispatch('links/deleteLink', {id})
+    },
     getReleasedAtFromNow () {
       if (!this.link || !this.link.createAt) {
         return ''
@@ -128,8 +139,8 @@ export default {
     }
   },
   computed: {
-    userdata () {
-      return this.$store.getters['user/userProfile']
+    userinfo () {
+      return this.$store.getters['auth/user']
     },
     formatedTitle () {
       if (!this.link || !this.link.link_title) {
