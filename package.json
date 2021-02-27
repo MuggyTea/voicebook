@@ -15,6 +15,7 @@
         "@fortawesome/free-regular-svg-icons": "^5.15.2",
         "@fortawesome/free-solid-svg-icons": "^5.15.2",
         "@fortawesome/vue-fontawesome": "^2.0.2",
+        "audiobuffer-to-wav": "^1.0.0",
         "bootstrap-vue": "^2.21.2",
         "core-js": "^3.6.5",
         "lamejs": "^1.2.0",
@@ -24,7 +25,9 @@
         "vue-audio-recorder": "^3.0.1",
         "vue-router": "^3.5.1",
         "vuetify": "^2.4.0",
-        "vuex": "^3.6.2"
+        "vuex": "^3.6.2",
+        "wav-arraybuffer": "^0.1.0",
+        "xhr": "^2.6.0"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.0",

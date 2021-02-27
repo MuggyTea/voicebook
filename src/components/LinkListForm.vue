@@ -83,6 +83,8 @@ export default {
     },
     addLink () {
       // if (!this.link.link_title && !this.link.description && !this.voiceUrl) {
+      console.log(this.voiceBlob)
+      console.log(this.voiceUrl)
       if (!this.voiceUrl) {
         console.log('何も入ってない')
         alert('音声を投稿してね')
@@ -98,8 +100,6 @@ export default {
       this.link.screenName = this.userinfo.screenName
       this.link.uid = this.userinfo.uid
       this.link.id_str = this.userinfo.id_str
-      console.log(this.voiceBlob)
-      console.log(this.voiceUrl)
       if (!this.voiceUrl) {
         console.log(this.link)
         console.log('音声なし')
@@ -121,7 +121,7 @@ export default {
         // this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
         // this.link = this.emptyLink()
-      }
+      } else {
       var blob = null // 画像blobデータ
       // // サムネ画像用canvasのサイズを上で算出した値に変更
       var canvas = document.getElementById("canvas")
@@ -166,12 +166,13 @@ export default {
         console.log(this.link)
         })
       })
+      }
 
       // 音声データをアップロードする
-      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.mp3')
+      const mountainRef_voice = storageRef.child('voiceData/' + String(this.voiceUrl) + '.wav')
       // Create file metadata including the content type
       var metadata_a = {
-        contentType: 'audio/mp3',
+        contentType: 'audio/wav',
       };
       // ファイルを適用してファイルアップロード
       mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
@@ -185,6 +186,8 @@ export default {
         // 空に戻す
         this.link = this.emptyLink()
         this.preview = null
+        const canvas_demo = window.document.getElementById('audiodemo')
+        canvas_demo.remove()
         })
       })
       // 空に戻す
