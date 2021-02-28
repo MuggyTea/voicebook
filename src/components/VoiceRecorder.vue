@@ -33,24 +33,16 @@ export default {
 initRecording() {
   // 音声入力の取得
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    console.log('録音するよ')
     navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(stream => {
-      console.log('メディアストリーマー')
       this.recorder = new MediaRecorder(stream);
-      console.log(this.recorder)
       this.recorder.start();
-      console.log(this.recorder)
       this.recorder.addEventListener('dataavailable', e => {
-        console.log('録音中だよ')
         // オーディオデータを格納
         this.audioData.push(e.data);
         this.audioExtension = this.getExtension(e.data.type);
-        console.log(this.audioData)
-        console.log(this.audioExtension)
         // this.recorder.stop()
         // ストップが押されたとき
         this.recorder.addEventListener('stop', () => {
-          console.log('止めるよ')
           // mp3に変換の準備
           var channels = 1; //1 for mono or 2 for stereo
           var sampleRate = 44100; //44.1khz (normal mp3 samplerate)
@@ -59,14 +51,10 @@ initRecording() {
           var mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, kbps);
 
           // samples = new Int16Array(44100); //one second of silence (get your data from the sourceyou have)
-          console.log(this.audioData)
-          console.log(typeof this.audioData)
-          console.log(e.data)
           // blobのe.dataをarraydataURLに変換する
           var fr = new FileReader()
           new Promise((resolve, reject) => {
             fr.onload = eve => {
-              console.log(fr.result)
               // String(fr.result).split('base64,')
               this.mp3array = new Int8Array(fr.result);
               // ArrayBufferをAudioBufferのArrayにへんかん
@@ -89,18 +77,11 @@ initRecording() {
                 source.buffer = buffer;
                 source.connect(context.destination);
                 source.loop = true;
-                console.log(waveencoder)
-                console.log(buffer)
-                console.log(source)
                 // AudioBuffer to Wav
                 waveencoder = audioBufferToWav(buffer)
-                console.log(waveencoder)
                 const audioBlob = new Blob([waveencoder], { 'type' : 'audio/wav' });
                 const url = URL.createObjectURL(audioBlob);
                 var audiodatalist = {'audioBlob': audioBlob, 'url': url}
-                console.log(audiodatalist)
-                console.log(audioBlob)
-                console.log(url)
                 var output = document.getElementById('output')
                 // 録音が終わったらオーディオタグを表示する
                 var au = document.createElement('audio')
@@ -110,38 +91,23 @@ initRecording() {
                 au.id = 'audiodemo'
                 output.appendChild(au)
                 var br = document.createElement('br')
-                console.log(audiodatalist)
-                console.log(audiodatalist.audioBlob)
-                console.log(audiodatalist.url)
                 vm.$emit('audioData', audioBlob, url, RawArrayBuffer, buffer, waveencoder)
                 },
 
                 function(e){ console.log("Error with decoding audio data" + e.err);
               })
-              // this.status = 'ready';
-              console.log(this.wavencoder)
-              console.log(b)
-              //one second of silence (get your data from the sourceyou have)
-              console.log(this.mp3array)
-              console.log(typeof this.mp3array)
-              console.log(this.mp3array.length)
               var mp3array_len = this.mp3array.length
-              console.log(mp3array_len)
-              console.log(this.wavencoder)
             }
             fr.onerror = eve => {
               console.log(fr.error)
             }
           })
           var b = fr.readAsArrayBuffer(e.data)
-          // var b = fr.readAsDataURL(e.data)
-          console.log(this.mp3Data)
 
         });
       });
     })
   } else {
-    console.log('マイクがおんにならないよ')
   }
 },
 // 録音開始
@@ -154,7 +120,6 @@ startRecording() {
       canvas_demo.remove()
     }
     this.processing = true
-    console.log(this.processing)
     this.initRecording()
     this.recorder.start()
     this.audioData = [];
@@ -184,7 +149,6 @@ addAudioTag() {
 },
 // 音声ファイルの拡張子を取得する
 getExtension(audioType) {
-  console.log(audioType)
     let extension = 'wav';
     // const matches = audioType.match(/audio\/([^;]+)/);
 

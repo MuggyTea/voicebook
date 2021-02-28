@@ -27,19 +27,14 @@ export default {
         },
         // リンク追加時
         [ADD](state, payload) {
-            console.log('add')
-            console.log(state)
-            console.log(payload)
-                // DBから受け取ったデータをステートにセット
+            // DBから受け取ったデータをステートにセット
             state.data.push(payload)
         },
         addData(state, payload) {
-            console.log('データを更新')
             state.alldata.unshift(payload)
         },
         alldata(state, payload) {
-            console.log('alldataをステートに追加')
-                // link_idを追加で更新する
+            // link_idを追加で更新する
             state.alldata.push(payload)
         },
         // 呼び出すとき
@@ -78,23 +73,17 @@ export default {
                 this.unsubscribe()
                 this.unsubscribe = null
             }
-            console.log(userinfo)
-            console.log(userinfo.screenName)
-                // ユーザー情報がないものは表示しない
+            // ユーザー情報がないものは表示しない
             if (!userinfo.screenName || !userinfo) {
                 console.warn('user does not exist')
-                console.log(userinfo)
                 userinfo.screenName = null
             }
             // firestoreからデータを検索する
             this.unsubscribe = LinkRef.where('screenName', '==', userinfo.screenName).onSnapshot(querySnapshot => {
                     // データが更新されるたびに呼び出される
-                    console.log(querySnapshot)
                     querySnapshot.docChanges().forEach(change => {
                         // querySnapshot.forEach(change => {
-                        console.log('links.js')
-                        console.log(change.doc.data())
-                            // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
+                        // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
                         const payload = {
                                 id: change.doc.id,
                                 link_id: (change.doc.id).substr(0, 4),
@@ -112,20 +101,13 @@ export default {
                             // 時刻がnullのものとログインユーザー以外は表示しない
                         if (!change.doc.data().screenName || !change.doc.data().createAt) {
                             console.warn('user does not exist')
-                            console.log(change.doc.data())
                             return
                         }
                         // ミューテーションを通してステートを更新する
                         if (change.type === 'added' && change.doc.data().link_id) {
-                            console.log('change.type add', change.type)
-                                // commit(ADD, payload)
-                            console.log(payload)
+                            // commit(ADD, payload)
                             commit(ADD, payload)
                         } else if (change.type === 'modified' && change.doc.data().link_id) {
-                            console.log('change.type add', change.type)
-                                // commit(ADD, payload)
-                                // console.log(payload)
-                                // commit(ADD, payload)
                             commit('addData', change.doc.data())
                         } else if (change.type === 'removed') {
                             commit('REMOVE', payload)
@@ -145,16 +127,10 @@ export default {
             // firestoreからデータを検索する
             this.unsubscribe = LinkRef.orderBy('createAt', 'desc').limit(15).onSnapshot(querySnapshot => {
                     // データが更新されるたびに呼び出される
-                    console.log(querySnapshot.docs)
-                    console.log(querySnapshot.docChanges())
                     querySnapshot.docChanges().some(change => {
-                        console.log('インデックスには15件取得する')
-                        console.log(change)
-                        console.log(change.doc.data())
-                            // 時刻がnullのものとログインユーザー以外は表示しない
+                        // 時刻がnullのものとログインユーザー以外は表示しない
                         if (!change.doc.data().screenName || !change.doc.data().createAt) {
                             console.warn('user does not exist')
-                            console.log(change.doc.data())
                             return
                         }
                         // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
@@ -175,14 +151,10 @@ export default {
 
                         // ミューテーションを通してステートを更新する
                         if (change.type === 'modified' && change.doc.data().link_id) {
-                            console.log('change.type add', change.type)
-                                // commit(ADD, payload)
-                            console.log(change.doc.data())
+                            // commit(ADD, payload)
                             commit('addData', change.doc.data())
                         } else if (change.type === 'added' && change.doc.data().link_id) {
-                            console.log('change.type add', change.type)
-                                // // commit(ADD, payload)
-                            console.log(change.doc.data())
+                            // // commit(ADD, payload)
                             commit(ADD, change.doc.data())
                         } else if (change.type === 'removed') {
                             commit('REMOVE', change.doc.data())
@@ -196,18 +168,15 @@ export default {
         // リスナーの停止
         stopListener() {
             if (this.unsubscribe) {
-                console.log('listener is stopping ', this.unsubscribe)
                 this.unsubscribe()
                 this.unsubscribe = null
             }
         },
         addLink({ commit }, payload) {
-            console.log('DBに登録するよ')
             LinkRef.add(payload)
                 .then(doc => {
                     // ミューテーションの外でステート管理しない
-                    console.log('link_idを追加する')
-                        // link_idをDBに追加
+                    // link_idをDBに追加
                     LinkRef.doc(doc.id).update({
                         'id': doc.id,
                         'link_id': (doc.id).substr(0, 4)

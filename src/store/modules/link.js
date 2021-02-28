@@ -21,20 +21,14 @@ export default {
     mutations: {
         // 受け取ったデータpayloadをステートに格納
         init(state, payload) {
-            console.log('init')
-            console.log(payload)
             state.data = payload
         },
         // リンク追加時
         [ADD](state, payload) {
-            console.log('add')
-            console.log(state)
-            console.log(payload)
-                // DBから受け取ったデータをステートにセット
+            // DBから受け取ったデータをステートにセット
             state.data.push(payload)
         },
         addData(state, payload) {
-            console.log('データを更新')
             state.data.unshift(payload)
         },
         // 呼び出すとき
@@ -55,7 +49,6 @@ export default {
     // コンポーネントはゲッターを通して状態監視する
     getters: {
         data(state) {
-            console.log(state.data)
             return state.data
         }
     },
@@ -71,22 +64,12 @@ export default {
                 this.unsubscribe = null
             }
             // firestoreからデータを検索する
-            console.log(payload)
-            console.log(payload.id)
-            console.log(payload.link_id)
-            console.log('link.jsssss')
             this.unsubscribe = LinkRef.where('link_id', '==', payload.link_id).onSnapshot(function(querySnapshot) {
                 // データが更新されるたびに呼び出される
-                console.log(querySnapshot.docs)
-                console.log(querySnapshot.docChanges())
                 querySnapshot.docChanges().some(change => {
-                    console.log('一投稿取得')
-                    console.log(change)
-                    console.log(change.doc.data())
-                        // 時刻がnullのものとログインユーザー以外は表示しない
+                    // 時刻がnullのものとログインユーザー以外は表示しない
                     if (!change.doc.data().screenName || !change.doc.data().createAt) {
                         console.warn('user does not exist')
-                        console.log(change.doc.data())
                         return
                     }
                     // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
@@ -104,7 +87,6 @@ export default {
                         userinfo: change.doc.data().userinfo,
                         voiceURL: change.doc.data().voiceURL
                     }
-                    console.log(payload)
                     commit('init', payload)
                         //     // ミューテーションを通してステートを更新する
                         // if (change.type === 'modified' && change.doc.data().link_id) {
@@ -126,7 +108,6 @@ export default {
         // リスナーの停止
         stopListener() {
             if (this.unsubscribe) {
-                console.log('listener is stopping ', this.unsubscribe)
                 this.unsubscribe()
                 this.unsubscribe = null
             }

@@ -47,7 +47,6 @@ export default {
   // pathの:idを直接書き換えた時の対応
   beforeRouteUpdate (to, from, next) {
     // 動的セグメントが変わった場合は、コールバック関数でtargetIdを更新する
-    console.log('URL書き換え')
     this.screen_name = to.params.id
     next()
   },

@@ -155,7 +155,6 @@ export default {
       return this.tweetUrl
     },
     remove (id) {
-      console.log(this.$store.dispatch('links/deleteLink', {id}))
       this.$store.dispatch('links/deleteLink', {id})
     },
     getReleasedAtFromNow () {
@@ -196,19 +195,13 @@ export default {
     },
     formatedReleasedAt () {
       if (!this.link.createAt) {
-        console.log('releaseAt is none')
-        console.log(this.link.createAt)
         return ''
       }
-      console.log(this.link.createAt)
       return this.$moment(this.link.createAt).format('YYYY/MM/DD HH:MM:SS')
     },
   },
   watch: {
     'link' (n, o) {
-      console.log('watch link')
-      console.log(n)
-      console.log(o)
     }
   }
 }

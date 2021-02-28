@@ -1,6 +1,7 @@
+import firestore from './src/plugins/firebase'
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-const db = admin.firestore()
+const db = firestore.collection('VoiceList')
 
 const CONFIG = functions.config()
 const app_domain = CONFIG.app.domain
@@ -9,10 +10,13 @@ const OGP_IMG_HEIGHT = 630
 
 const func = functions.https.onRequest((req, res) => {
     // URLを/で分ける。ドメイン、ユーザー名、ユーザーidが取れる
+    console.log(res)
+    console.log(req)
     const [, userScreenName, endpoint] = req.path.split('/')
-    return db.collection('VoiceList').doc(endpoint).get().then(snap => {
+    return db.doc(endpoint).get().then(snap => {
         if (!snap) {
             res.status(404).end('404 Not Found')
+            console.log(res.statue)
             return
         }
         console.log(snap)
@@ -44,7 +48,7 @@ const createHtml = (uname, userId, photoURL, voiceURL) => {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>colorinco</title>
+    <title>こえろぐ -VoiceBook- </title>
     <!-- 共通設定 -->
     <meta property="og:title" content="${TITLE}">
     <meta property="og:type" content="article">

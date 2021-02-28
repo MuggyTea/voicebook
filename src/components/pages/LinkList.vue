@@ -40,17 +40,13 @@ export default {
   // pathの:idを直接書き換えた時の対応
   beforeRouteUpdate (to, from, next) {
     // 動的セグメントが変わった場合は、コールバック関数でtargetIdを更新する
-    console.log('URL書き換え')
-    console.log(to.params)
     this.screen_name = to.params.screen_name
     next()
-    console.log('beforeRouteUpdateだよ')
     this.init()
     this.start(this.screen_name)
     this.getUser(this.screen_name)
   },
   mounted () {
-    console.log('mountedだよ')
     this.init()
     this.start(this.screen_name)
     // this.getUser(this.screen_name)
@@ -60,11 +56,9 @@ export default {
   },
   methods: {
     init () {
-      console.log('メモを検索する')
       this.$store.dispatch('links/clear')
     },
     start (screenName) {
-      console.log(screenName)
       this.$store.dispatch('links/startListener', {screenName})
     },
     stop () {
@@ -79,15 +73,12 @@ export default {
   // ゲッター
   computed: {
     userinfo () {
-      console.log('userinfo取得')
       return this.$store.getters['auth/user']
     },
     isLogin () {
-      console.log('ログイン判定取得')
       return this.$store.getters['auth/check']
     },
     links () {
-      console.log('getter')
       return this.$store.getters['links/data']
     },
     userdata () {

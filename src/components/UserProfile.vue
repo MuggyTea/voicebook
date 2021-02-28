@@ -53,7 +53,6 @@ export default {
   },
   methods: {
     userProfile () {
-      console.log(this.user_profile)
       this.$store.dispatch('user/userData', {screen_name: this.user_profile})
     }
   },

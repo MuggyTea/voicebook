@@ -59,12 +59,10 @@ export default {
   // pathの:idを直接書き換えた時の対応
   beforeRouteUpdate (to, from, next) {
     // 動的セグメントが変わった場合は、コールバック関数でtargetIdを更新する
-    console.log('URL書き換え')
     this.targetId = to.params.id
     next()
   },
   mounted () {
-    console.log('mounted')
     this.init()
     this.start()
   },
@@ -93,12 +91,8 @@ export default {
       if (!this.targetId) {
         console.error('invalid id')
         console.error(this.targetId)
-        console.log(this.id)
-        console.log(this.link_id)
         return CONSTANS.ERROR_MEMO
       }
-      console.log('link() sotore getter ')
-      console.log(this.$store.getters['link/data'])
       return this.$store.getters['link/data']
     },
     platforms () {
@@ -114,8 +108,6 @@ export default {
     },
     formatedReleasedAt () {
       if (!this.link.createAt) {
-        console.log('releaseAt is none')
-        console.log(this.link.createAt)
         return ''
       }
       return this.$moment(this.link.createAt).format('YYYY/MM/DD HH：MM：SS')
@@ -129,7 +121,6 @@ export default {
   },
   watch: {
     'link' (n, o) {
-      console.log('new: %s, old: %s', JSON.stringify(n), JSON.stringify(o))
     }
   }
 }
