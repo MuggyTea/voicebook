@@ -2,10 +2,10 @@
     <div v-if="isLogin" class="card md-2 float-lg-left" style="width:320px">
       <v-card class="elevation-12">
         <div class="card-header text-left">
-            <input type="text" class="form-control" placeholder="link_title" v-model.trim="link.link_title">
+            <input type="text" class="form-control" placeholder="タイトル(任意)" v-model.trim="link.link_title">
         </div>
         <div class="card-body text-left">
-            <textarea class="form-control" placeholder="descriptioin" v-model.trim="link.description"></textarea>
+            <textarea class="form-control" placeholder="説明(任意)" v-model.trim="link.description"></textarea>
         </div>
           <v-card-actions>
             <voice-recorder
@@ -22,7 +22,7 @@
               v-model="imageName"
               prepend-icon="attach_file"
               >
-                アイキャッチ画像
+                アイキャッチ画像をつける
                 <input
                 type="file"
                 style="display: none"

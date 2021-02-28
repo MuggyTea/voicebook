@@ -87,15 +87,15 @@
               </font-awesome-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn text>
+            <!-- <v-btn text>
               <font-awesome-icon :icon="['fas', 'heart']" />
-            </v-btn>
-            <v-btn text>
+            </v-btn> -->
+            <v-btn text @click="shareTwitter">
               <font-awesome-icon :icon="['fab', 'twitter']" />
             </v-btn>
-            <v-btn text>
+            <!-- <v-btn text>
               <font-awesome-icon :icon="['fab', 'youtube']" />
-            </v-btn>
+            </v-btn> -->
           </v-card-actions>
         </v-flex>
       </v-layout>
@@ -124,6 +124,9 @@ export default {
     }
   },
   methods: {
+    shareTwitter() {
+      
+    },
     remove (id) {
       console.log(this.$store.dispatch('links/deleteLink', {id}))
       this.$store.dispatch('links/deleteLink', {id})
