@@ -15,5 +15,8 @@ export default {
             voiceURL: ''
         }
     },
-    PLATFORMS: ['FC', 'SFC', 'GB', '64', 'GC', 'DS', 'Wii', '3DS', 'Wii U', 'Switch']
+    TWEET_URL: "https://aitter-twigene.work/tweet",
+    GENERATE_URL: "https://aitter-twigene.work/generate",
+    SLACK_SERVER_ERROR: "https://hooks.slack.com/services/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",
+    SLACK_TWEET: "https://hooks.slack.com/services/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"
 }

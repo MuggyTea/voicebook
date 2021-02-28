@@ -22,7 +22,7 @@ const routes = [{
         component: Index
     },
     {
-        path: '/:screen_name/:link_id',
+        path: '/:screen_name/:id',
         name: 'LinkPage',
         component: LinkPage,
         props: true, // データの受け渡しを可能にする

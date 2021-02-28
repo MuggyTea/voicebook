@@ -1,5 +1,6 @@
 import firestore from '../../plugins/firebase'
 import CONSTANS from '../../components/constants'
+import { ADD } from './mutation-types'
 /**
  * リンクページで表示するリンク一件分のデータを管理する
  */
@@ -14,7 +15,7 @@ export default {
     state() {
         return {
             // 一件分なので
-            data: {}
+            data: []
         }
     },
     mutations: {
@@ -25,8 +26,16 @@ export default {
             state.data = payload
         },
         // リンク追加時
-        add(state, payload) {
+        [ADD](state, payload) {
+            console.log('add')
+            console.log(state)
+            console.log(payload)
+                // DBから受け取ったデータをステートにセット
             state.data.push(payload)
+        },
+        addData(state, payload) {
+            console.log('データを更新')
+            state.data.unshift(payload)
         },
         // 呼び出すとき
         set(state, payload) {
@@ -67,39 +76,51 @@ export default {
             console.log(payload.link_id)
             console.log('link.jsssss')
             this.unsubscribe = LinkRef.where('link_id', '==', payload.link_id).onSnapshot(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                        console.log('link.js')
-                            // データが更新されるたびに呼び出される
-                        commit('init', {
-                            id: doc.id,
-                            link_id: doc.data().link_id,
-                            create_num: doc.data().create_num,
-                            link_title: doc.data().link_title,
-                            description: doc.data().description,
-                            platforms: doc.data().platforms,
-                            million: doc.data().million,
-                            createAt: new Date(doc.data().createAt.seconds * 1000),
-                            photo: doc.data().photo
-                        })
-                    })
-                    // doc => {
-                    //   console.log('link.js')
-                    //   console.log(doc.docs.map)
-                    //   console.log(doc.docs.keys())
-                    //   console.log(doc.docs.link_id)
-                    //   // データが更新されるたびに呼び出される
-                    //   commit('init', {
-                    //     id: doc.id,
-                    //     link_id: doc.data().link_id,
-                    //     create_num: doc.data().create_num,
-                    //     link_title: doc.data().link_title,
-                    //     description: doc.data().description,
-                    //     platforms: doc.data().platforms,
-                    //     million: doc.data().million,
-                    //     createAt: new Date(doc.data().createAt.seconds * 1000),
-                    //     photo: doc.data().photo
-                    //   })
-                    // }
+                // データが更新されるたびに呼び出される
+                console.log(querySnapshot.docs)
+                console.log(querySnapshot.docChanges())
+                querySnapshot.docChanges().some(change => {
+                    console.log('一投稿取得')
+                    console.log(change)
+                    console.log(change.doc.data())
+                        // 時刻がnullのものとログインユーザー以外は表示しない
+                    if (!change.doc.data().screenName || !change.doc.data().createAt) {
+                        console.warn('user does not exist')
+                        console.log(change.doc.data())
+                        return
+                    }
+                    // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
+                    const payload = {
+                        id: change.doc.id,
+                        link_id: (change.doc.id).substr(0, 4),
+                        create_num: change.doc.data().create_num,
+                        link_title: change.doc.data().link_title,
+                        description: change.doc.data().description,
+                        id_str: change.doc.data().id_str,
+                        screenName: change.doc.data().screenName,
+                        createAt: new Date(change.doc.data().createAt.seconds * 1000),
+                        photoURL: change.doc.data().photoURL,
+                        uid: change.doc.data().uid,
+                        userinfo: change.doc.data().userinfo,
+                        voiceURL: change.doc.data().voiceURL
+                    }
+                    console.log(payload)
+                    commit('init', payload)
+                        //     // ミューテーションを通してステートを更新する
+                        // if (change.type === 'modified' && change.doc.data().link_id) {
+                        //     console.log('change.type add', change.type)
+                        //         // commit(ADD, payload)
+                        //     console.log(change.doc.data())
+                        //     commit('addData', change.doc.data())
+                        // } else if (change.type === 'added' && change.doc.data().link_id) {
+                        //     console.log('change.type add', change.type)
+                        //         // // commit(ADD, payload)
+                        //     console.log(change.doc.data())
+                        //     commit(ADD, change.doc.data())
+                        // } else if (change.type === 'removed') {
+                        //     commit('REMOVE', change.doc.data())
+                        // }
+                })
             })
         },
         // リスナーの停止

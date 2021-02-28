@@ -28,17 +28,19 @@ export default {
         // リンク追加時
         [ADD](state, payload) {
             console.log('add')
+            console.log(state)
+            console.log(payload)
                 // DBから受け取ったデータをステートにセット
             state.data.push(payload)
+        },
+        addData(state, payload) {
+            console.log('データを更新')
+            state.alldata.unshift(payload)
         },
         alldata(state, payload) {
             console.log('alldataをステートに追加')
                 // link_idを追加で更新する
             state.alldata.push(payload)
-        },
-        addData(state, payload) {
-            console.log('データを更新')
-            state.alldata.unshift(payload)
         },
         // 呼び出すとき
         set(state, payload) {

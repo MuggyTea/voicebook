@@ -1,13 +1,36 @@
 <template>
-  <div class="details container-fluent text-center">
+  <div class="pade__details container-fluent">
     <div class="col">
+      <v-card-title class="name align-end justify-center fill-height">
+        <v-btn color="black" text
+        :to="{ name: 'LinkList', params: {screen_name: link.screenName }}"
+        >
+        <v-avatar
+          color="grey lighten-4"
+          >
+          <img
+          v-if="link.userinfo.photoURL"
+          :src="link.userinfo.photoURL"
+          alt="profile"
+          >
+        </v-avatar>
+        {{ link.userinfo.displayName }}さんのユーザーページに飛ぶ
+        </v-btn>
+      </v-card-title>
       <div class="card" v-if="link.id">
         <h5 class="card-title">{{ link.link_title }}</h5>
       </div>
+      <v-img
+        :src="link.photoURL"
+        width="400px"
+        center
+      >
+      </v-img>
+      <audio controls :src="formatedAudio" type="audio/wav"></audio>
       <div class="card-body text-left">
         <p class="card-text" v-html="formatedDescription" />
         <hr class="mb-3" />
-        <small>Release Date. {{ formatedReleasedAt }}</small>
+        <small>{{ formatedReleasedAt }}</small>
       </div>
       <div class="card-footer text-right">
         <button class="btn btn-primary" v-on:click="historyBack">back</button>
@@ -95,15 +118,26 @@ export default {
         console.log(this.link.createAt)
         return ''
       }
-      return this.$moment(this.link.createAt).format('YYYY/MM/DD')
+      return this.$moment(this.link.createAt).format('YYYY/MM/DD HH：MM：SS')
+    },
+    formatedAudio () {
+      if ( !this.link.voiceURL) {
+        return ''
+      }
+      return this.link.voiceURL
     }
   },
   watch: {
     'link' (n, o) {
-      if (!n) {
-        this.$router.push(':screen_name')
-      }
+      console.log('new: %s, old: %s', JSON.stringify(n), JSON.stringify(o))
     }
   }
 }
 </script>
+<style scoped>
+.pade__details {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+</style>

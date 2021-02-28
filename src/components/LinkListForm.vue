@@ -2,7 +2,7 @@
     <div v-if="isLogin" class="card md-2 float-lg-left" style="width:320px">
       <v-card class="elevation-12">
         <div class="card-header text-left">
-            <input type="text" class="form-control" placeholder="タイトル(任意)" v-model.trim="link.link_title">
+            <input type="text" class="form-control" placeholder="タイトル(必須)" v-model.trim="link.link_title">
         </div>
         <div class="card-body text-left">
             <textarea class="form-control" placeholder="説明(任意)" v-model.trim="link.description"></textarea>
@@ -11,6 +11,9 @@
             <voice-recorder
               :voiceUrl="voiceUrl"
               :voiceBlob="voiceBlob"
+              :voiceRawBufferArry="voiceRawBufferArry"
+              :voiceRawAudioBuffer="voiceRawAudioBuffer"
+              :voiceBufferArrayWav="voiceBufferArrayWav"
               @audioData="emitEvent"
             ></voice-recorder>
           </v-card-actions>
@@ -84,25 +87,34 @@ export default {
       voiceBlob: null,
       voiceUrl: null,
       voiceStrageUrl: null,
-      processing: false
+      processing: false,
+      voiceRawBufferArry: null,
+      voiceRawAudioBuffer: null,
+      voiceBufferArrayWav: null
     }
   },
   methods: {
-    emitEvent(voiceBlob, voiceUrl) {
+    emitEvent(voiceBlob, voiceUrl, voiceRawBufferArry, voiceRawAudioBuffer, voiceBufferArrayWav) {
       this.voiceBlob = voiceBlob
       this.voiceUrl = voiceUrl
+      this.voiceRawBufferArry=voiceRawBufferArry
+      this.voiceRawAudioBuffer=voiceRawAudioBuffer
+      this.voiceBufferArrayWav=voiceBufferArrayWav
       console.log(this.voiceBlob)
       console.log(this.voiceUrl)
+      console.log(this.voiceRawBufferArry)
+      console.log(this.voiceRawAudioBuffer)
+      console.log(this.voiceBufferArrayWav)
     },
     addLink () {
       this.processing = true
       // if (!this.link.link_title && !this.link.description && !this.voiceUrl) {
       console.log(this.voiceBlob)
       console.log(this.voiceUrl)
-      if (!this.voiceUrl) {
+      if (!this.voiceUrl || !this.link.link_title) {
         console.log('何も入ってない')
         this.processing = null
-        alert('音声を投稿してね')
+        alert('タイトルと音声を投稿してね')
         return
       }
       console.log('add new Link')
@@ -132,6 +144,7 @@ export default {
       if (!this.imageName) {
         console.log(this.link)
         console.log('画像なし')
+        this.link.photoURL = 'https://firebasestorage.googleapis.com/v0/b/voicebook-f2d88.appspot.com/o/defalutImage%2Fcat-5496162_640.jpg?alt=media&token=890df79f-3236-48e3-83c4-8b31d08b8cdd'
         // ステートを変更
         // this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
@@ -195,6 +208,16 @@ export default {
         this.voiceStrageUrl = downloadURL
         console.log(this.voiceStrageUrl)
         this.link.voiceURL = downloadURL
+        // this.link.voiceRawBufferArry=this.voiceRawBufferArry
+        // this.link.voiceRawAudioBuffer=this.voiceRawAudioBuffer
+        // this.link.voiceBufferArrayWav = this.voiceBufferArrayWav
+        this.link.voiceURLs = { downloadURL : downloadURL }
+        // this.link.voiceData = {
+        //   'voiceURL': downloadURL,
+        //   // 'voiceRawBufferArry': this.voiceRawBufferArry,
+        //   // 'voiceRawAudioBuffer': this.voiceRawAudioBuffer,
+        //   // 'voiceBufferArrayWav': this.voiceBufferArrayWav,
+        // }
         console.log(this.link)
         // ステートを変更
         this.$store.dispatch('links/addLink', this.link)

@@ -41,7 +41,7 @@
             params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }"
           >
           <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          src='../assets/cat-5496162_640.jpg'
           height="200px"
           v-if="!link.photoURL"
           >
@@ -75,6 +75,11 @@
                 <h6 class="grey--text">{{ formatedDescription }}</h6>
               </v-card-text>
           <v-card-actions class="card__actions">
+            <div class="card-body text-left">
+              <p class="card-text" v-html="formatedDescription" />
+              <hr class="mb-3" />
+              <small>{{ formatedReleasedAt }}</small>
+            </div>
             <!-- 削除機能 -->
             <v-btn text
               v-if="!userinfo"
@@ -90,7 +95,7 @@
             <!-- <v-btn text>
               <font-awesome-icon :icon="['fas', 'heart']" />
             </v-btn> -->
-            <v-btn text @click="shareTwitter">
+            <v-btn text @click="PostingTweet">
               <font-awesome-icon :icon="['fab', 'twitter']" />
             </v-btn>
             <!-- <v-btn text>
@@ -105,6 +110,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import CONSTANT from './constants/index'
 export default {
   name: 'LinkListCard',
   data () {
@@ -124,8 +131,28 @@ export default {
     }
   },
   methods: {
-    shareTwitter() {
-      
+    PostingTweet (btn) {
+      if (this.processing) return
+      this.processing = true
+      const userinfo = this.$store.getters['auth/user']
+      this.processing = false
+      const tweetPage = this.createTweetUrl()
+      // window.location.href = tweetPage
+      if (!window.open(tweetPage)) {
+        window.location.href = tweetPage
+      } else {
+        // window.open(tweetPage)
+        window.location.reload(false)
+      }
+    },
+    createTweetUrl() {
+            // Twitter用のurl作成
+      const url = encodeURIComponent(location.href+this.link.screenName+'/'+this.link.id)
+      const hashTags = encodeURI('こえろぐ,VoiceBook')
+      // const generatedText = encodeURI(this.link.screenName)
+      // this.tweetUrl = 'https://twitter.com/intent/tweet?text=' + generatedText + '&hashtags=' + hashTags + '&url=' + url
+      this.tweetUrl = 'https://twitter.com/intent/tweet?hashtags=' + hashTags + '&url=' + url
+      return this.tweetUrl
     },
     remove (id) {
       console.log(this.$store.dispatch('links/deleteLink', {id}))
@@ -166,7 +193,16 @@ export default {
         return ''
       }
       return this.link.voiceURL
-    }
+    },
+    formatedReleasedAt () {
+      if (!this.link.createAt) {
+        console.log('releaseAt is none')
+        console.log(this.link.createAt)
+        return ''
+      }
+      console.log(this.link.createAt)
+      return this.$moment(this.link.createAt).format('YYYY/MM/DD')
+    },
   },
   watch: {
     'link' (n, o) {

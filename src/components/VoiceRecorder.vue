@@ -39,6 +39,7 @@ initRecording() {
       this.recorder = new MediaRecorder(stream);
       console.log(this.recorder)
       this.recorder.start();
+      console.log(this.recorder)
       this.recorder.addEventListener('dataavailable', e => {
         console.log('録音中だよ')
         // オーディオデータを格納
@@ -46,7 +47,7 @@ initRecording() {
         this.audioExtension = this.getExtension(e.data.type);
         console.log(this.audioData)
         console.log(this.audioExtension)
-        this.recorder.stop()
+        // this.recorder.stop()
         // ストップが押されたとき
         this.recorder.addEventListener('stop', () => {
           console.log('止めるよ')
@@ -80,6 +81,7 @@ initRecording() {
               var context = new (window.AudioContext || window.webkitAudioContext)()
               var source = context.createBufferSource()
               var vm = this
+              var RawArrayBuffer = fr.result
               context.decodeAudioData(fr.result, function(buffer) {
                 // bufferはAudioBuffer
                 // sourceはAudioBufferNode
@@ -94,7 +96,6 @@ initRecording() {
                 waveencoder = audioBufferToWav(buffer)
                 console.log(waveencoder)
                 const audioBlob = new Blob([waveencoder], { 'type' : 'audio/wav' });
-                // var audioBlob = new Blob(this.mp3Data, { 'type' : 'audio/mp3' });
                 const url = URL.createObjectURL(audioBlob);
                 var audiodatalist = {'audioBlob': audioBlob, 'url': url}
                 console.log(audiodatalist)
@@ -112,7 +113,7 @@ initRecording() {
                 console.log(audiodatalist)
                 console.log(audiodatalist.audioBlob)
                 console.log(audiodatalist.url)
-                vm.$emit('audioData', audiodatalist.audioBlob, audiodatalist.url)
+                vm.$emit('audioData', audioBlob, url, RawArrayBuffer, buffer, waveencoder)
                 },
 
                 function(e){ console.log("Error with decoding audio data" + e.err);
@@ -155,15 +156,15 @@ startRecording() {
     this.processing = true
     console.log(this.processing)
     this.initRecording()
+    this.recorder.start()
     this.audioData = [];
-    this.recorder.start();
 
 },
 // 録音停止
 stopRecording() {
   this.status = 'ready';
-  this.recorder.stop();
   this.initRecording()
+  this.recorder.stop()
   this.processing = false
 },
 // オーディオタグの追加

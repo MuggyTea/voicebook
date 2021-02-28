@@ -17,16 +17,16 @@ src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
 >
 </v-img>
 <v-card-title class="name align-end justify-center fill-height">
-    <v-avatar
-color="grey lighten-4"
-size="70px"
->
-<img
-v-if="userdata.photoURL"
-:src="userdata.photoURL"
-alt="profile"
->
-</v-avatar>
+  <v-avatar
+    color="grey lighten-4"
+    size="70px"
+    >
+    <img
+    v-if="userdata.photoURL"
+    :src="userdata.photoURL"
+    alt="profile"
+    >
+  </v-avatar>
             {{ userdata.displayName }}
 </v-card-title>
         <ul class="icon">
