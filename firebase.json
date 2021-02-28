@@ -20,9 +20,14 @@
             "**/node_modules/**"
         ],
         "rewrites": [{
-            "source": "**",
-            "destination": "/index.html"
-        }]
+                "source": "/*",
+                "function": "stockpage"
+            },
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
     },
     "storage": {
         "rules": "storage.rules"
