@@ -75,11 +75,11 @@
                 <h6 class="grey--text">{{ formatedDescription }}</h6>
               </v-card-text>
           <v-card-actions class="card__actions">
-            <div class="card-body text-left">
+            <!-- <div class="card-body text-left">
               <p class="card-text" v-html="formatedDescription" />
               <hr class="mb-3" />
               <small>{{ formatedReleasedAt }}</small>
-            </div>
+            </div> -->
             <!-- 削除機能 -->
             <v-btn text
               v-if="!userinfo"
@@ -201,7 +201,7 @@ export default {
         return ''
       }
       console.log(this.link.createAt)
-      return this.$moment(this.link.createAt).format('YYYY/MM/DD')
+      return this.$moment(this.link.createAt).format('YYYY/MM/DD HH:MM:SS')
     },
   },
   watch: {
