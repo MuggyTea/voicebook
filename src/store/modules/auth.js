@@ -37,7 +37,9 @@ const actions = {
                 TwitterUsersInfo.doc(userInfo.id_str).get()
                     .then(function(docs) {
                         // 新規ユーザーだったらDBに登録
-                        if (docs.exists) {} else {
+                        if (docs.exists) {
+                            console.log('exsting user')
+                        } else {
                             TwitterUsersInfo.doc(userInfo.id_str).set({
                                     userInfo,
                                     'timestamp': firebase.firestore.FieldValue.serverTimestamp()

@@ -108,6 +108,7 @@ initRecording() {
       });
     })
   } else {
+    alert('マイクがオフです')
   }
 },
 // 録音開始

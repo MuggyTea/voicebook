@@ -1,5 +1,5 @@
 [{
-    "origin": ["https://firebasestorage.googleapis.com", "https://voicebook.club", "https://voicebook.club/*", "https://twitter.com", "https://twitter.com/*", "https://cards-dev.twitter.com/validator", "http://172.217.161.202:443", "https://172.217.161.202:443"],
+    "origin": ["https://firebasestorage.googleapis.com", "https://voicebook.club", "https://voicebook.club/*", "https://voicebook.club/page/*"],
     "responseHeader": ["*"],
     "method": ["GET", "POST", "PUT"],
     "maxAgeSeconds": 86400

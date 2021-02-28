@@ -38,7 +38,7 @@
           <!-- <v-img :src="link.src" max-height="100px"></v-img> -->
           <router-link
             v-bind:to="{name: 'LinkPage',
-            params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }"
+            params: {link_id: link.link_id, id: link.id, screen_name: link.screenName, photoURL: link.photoURL} }"
           >
           <v-img
           src='../assets/cat-5496162_640.jpg'
@@ -147,7 +147,7 @@ export default {
     },
     createTweetUrl() {
             // Twitter用のurl作成
-      const url = encodeURIComponent(location.href+this.link.screenName+'/'+this.link.id)
+      const url = encodeURIComponent(location.href+ 'page/' +this.link.screenName+'/'+this.link.id)
       const hashTags = encodeURI('こえろぐ,VoiceBook')
       // const generatedText = encodeURI(this.link.screenName)
       // this.tweetUrl = 'https://twitter.com/intent/tweet?text=' + generatedText + '&hashtags=' + hashTags + '&url=' + url

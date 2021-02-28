@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isLogin" class="card md-2 float-lg-left" style="width:320px">
+    <div class="card md-2 float-lg-left" style="width:320px">
       <v-card class="elevation-12">
         <div class="card-header text-left">
             <input type="text" class="form-control" placeholder="タイトル(必須)" v-model.trim="link.link_title">
@@ -100,26 +100,20 @@ export default {
       this.voiceRawBufferArry=voiceRawBufferArry
       this.voiceRawAudioBuffer=voiceRawAudioBuffer
       this.voiceBufferArrayWav=voiceBufferArrayWav
-      console.log(this.voiceBlob)
-      console.log(this.voiceUrl)
-      console.log(this.voiceRawBufferArry)
-      console.log(this.voiceRawAudioBuffer)
-      console.log(this.voiceBufferArrayWav)
     },
     addLink () {
       this.processing = true
       // if (!this.link.link_title && !this.link.description && !this.voiceUrl) {
-      console.log(this.voiceBlob)
-      console.log(this.voiceUrl)
+      if(!this.isLogin){
+        this.processing = null
+        alert('ログインして投稿してね')
+        return
+      }
       if (!this.voiceUrl || !this.link.link_title) {
-        console.log('何も入ってない')
         this.processing = null
         alert('タイトルと音声を投稿してね')
         return
       }
-      console.log('add new Link')
-      console.log(new Date())
-      //   console.log(this.emptyLink())
       this.link.platforms = []
       this.link.million = false
       this.link.createAt = new Date()
@@ -128,8 +122,6 @@ export default {
       this.link.uid = this.userinfo.uid
       this.link.id_str = this.userinfo.id_str
       if (!this.voiceUrl) {
-        console.log(this.link)
-        console.log('音声なし')
         // // ステートを変更
         // this.$store.dispatch('links/addLink', this.link)
         // // 空に戻す
@@ -142,8 +134,6 @@ export default {
       const storageRef = firebase.storage().ref()
       // アイキャッチデータをアップロードする
       if (!this.imageName) {
-        console.log(this.link)
-        console.log('画像なし')
         this.link.photoURL = 'https://firebasestorage.googleapis.com/v0/b/voicebook-f2d88.appspot.com/o/defalutImage%2Fcat-5496162_640.jpg?alt=media&token=890df79f-3236-48e3-83c4-8b31d08b8cdd'
         // ステートを変更
         // this.$store.dispatch('links/addLink', this.link)
@@ -155,14 +145,9 @@ export default {
       var canvas = document.getElementById("canvas")
       // canvasからbase64画像データを取得
       var base64_url = canvas.toDataURL('image/jpeg')
-      console.log(base64_url)
       // base64からblobデータを作成
       var base64 = String(base64_url).split('base64,')
       var barr, bin , i, len
-      console.log(typeof base64)
-      console.log(base64)
-      console.log(base64[1])
-      // console.log(base64_s)
       bin = atob(btoa(base64[1]))
       bin = atob(base64[1])
       len = bin.length
@@ -173,11 +158,8 @@ export default {
         i++
       }
       blob = new Blob([barr], {type: 'image/jpeg'})
-      console.log(blob)
       // this.imageURL = reader.result
       this.imageFile = blob
-      console.log(this.imageFile)
-      console.log(this.imageName)
       // Create file metadata including the content type
       var metadata = {
         contentType: 'image/jpeg',
@@ -189,9 +171,7 @@ export default {
       mountainRef.put(this.imageFile, metadata).then(snapshot => {
         snapshot.ref.getDownloadURL().then(downloadURL => {
         this.imageURL = downloadURL
-        console.log(this.imageURL)
         this.link.photoURL = downloadURL
-        console.log(this.link)
         })
       })
       }
@@ -206,7 +186,6 @@ export default {
       mountainRef_voice.put(this.voiceBlob, metadata_a).then(snapshot => {
         snapshot.ref.getDownloadURL().then(downloadURL => {
         this.voiceStrageUrl = downloadURL
-        console.log(this.voiceStrageUrl)
         this.link.voiceURL = downloadURL
         // this.link.voiceRawBufferArry=this.voiceRawBufferArry
         // this.link.voiceRawAudioBuffer=this.voiceRawAudioBuffer
@@ -218,14 +197,12 @@ export default {
         //   // 'voiceRawAudioBuffer': this.voiceRawAudioBuffer,
         //   // 'voiceBufferArrayWav': this.voiceBufferArrayWav,
         // }
-        console.log(this.link)
         // ステートを変更
         this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
         this.link = this.emptyLink()
         this.preview = null
         this.processing = null
-        console.log(this.processing)
         const canvas_demo = window.document.getElementById('audiodemo')
         canvas_demo.remove()
         })
@@ -233,16 +210,8 @@ export default {
       // 空に戻す
       // this.link = this.emptyLink()
       // this.preview = null
-      console.log(this.imageFile)
-      console.log(typeof this.imageFile)
-      console.log(this.imageName)
-      console.log(String(this.imageName))
-      console.log(this.voiceStrageUrl)
-      console.log(this.voiceUrl)
-      console.log(this.voiceStrageUrl)
     },
     emptyLink () {
-      console.log('empty link')
       return CONSTANTS.NEW_EMPTY_MEMO()
     },
     pickFile () {
@@ -250,15 +219,12 @@ export default {
     },
     onFilePicked (event) {
       // フォームでファイルが選択されたら実行される
-      console.log(event.target.files)
       if (event.target.files.length === 0) {
-        console.log(event.target.files.length)
         this.reset()
         return false
       }
       // ファイルが画像でなかったら処理中断
       if (!event.target.files[0].type.match('image/*')) {
-        console.log(event.target.files[0].type)
         this.reset()
         return false
       }
@@ -299,9 +265,7 @@ export default {
       // また、<output>内部の<img>のsrc属性はpreviewの値を参照しているので、結果として画像が表示される
       this.preview = e.target.result
       // this.canvas = e.target.result
-      console.log(this.preview)
       this.imageName = event.target.files[0].name
-      console.log(this.imageName)
       image.src = e.target.result;
     }
     // ファイルを読み込む
@@ -323,7 +287,6 @@ export default {
       mountainRef.put(this.imageFile).then(snapshot => {
         snapshot.ref.getDownloadURL().then(downloadURL => {
           this.imageURL = downloadURL
-          console.log(this.imageURL)
           this.link.photoURL = downloadURL
           // firestore.collection('LinkPage').add({
           //   'photoURL': downloadURL
@@ -342,7 +305,6 @@ export default {
   },
   watch: {
     'link' (n, o) {
-      console.log('new: %s, old: %s', JSON.stringify(n), JSON.stringify(o))
     }
   }
 }
