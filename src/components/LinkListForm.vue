@@ -8,13 +8,11 @@
             <textarea class="form-control" placeholder="descriptioin" v-model.trim="link.description"></textarea>
         </div>
           <v-card-actions>
-            <v-btn color="white" v-model.trim="link.voice_rec">
-              <voice-recorder
-                :voiceUrl="voiceUrl"
-                :voiceBlob="voiceBlob"
-                @audioData="emitEvent"
-              ></voice-recorder>
-            </v-btn>
+            <voice-recorder
+              :voiceUrl="voiceUrl"
+              :voiceBlob="voiceBlob"
+              @audioData="emitEvent"
+            ></voice-recorder>
           </v-card-actions>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -35,11 +33,25 @@
               </v-btn>
           </v-card-actions>
           <!-- サムネイル表示領域 -->
-          <output class="form__output" v-if="preview" width="300px" height="300px">
+          <output class="form__output" v-if="preview" width="500px" height="500px">
               <canvas id="canvas"></canvas>
           </output>
         <div class="card-footer text-right">
-            <button class="btn-sm btn-secondary" type="submit" v-on:click.prevent="addLink">投稿</button>
+            <v-btn dark
+              class="btn-sm btn-secondary"
+              type="submit"
+              v-if="!processing"
+              v-on:click.prevent="addLink"
+              :loading="processing"
+              :disabled="processing"
+            >投稿</v-btn>
+            <v-btn
+              class="btn-sm btn-secondary"
+              type="submit"
+              v-if="processing"
+              :loading="processing"
+              :disabled="!processing"
+            >投稿しています</v-btn>
         </div>
         </v-card>
     </div>
@@ -71,7 +83,8 @@ export default {
       imageFile: null,
       voiceBlob: null,
       voiceUrl: null,
-      voiceStrageUrl: null
+      voiceStrageUrl: null,
+      processing: false
     }
   },
   methods: {
@@ -82,11 +95,13 @@ export default {
       console.log(this.voiceUrl)
     },
     addLink () {
+      this.processing = true
       // if (!this.link.link_title && !this.link.description && !this.voiceUrl) {
       console.log(this.voiceBlob)
       console.log(this.voiceUrl)
       if (!this.voiceUrl) {
         console.log('何も入ってない')
+        this.processing = null
         alert('音声を投稿してね')
         return
       }
@@ -116,7 +131,7 @@ export default {
       // アイキャッチデータをアップロードする
       if (!this.imageName) {
         console.log(this.link)
-        console.log('から')
+        console.log('画像なし')
         // ステートを変更
         // this.$store.dispatch('links/addLink', this.link)
         // 空に戻す
@@ -186,6 +201,8 @@ export default {
         // 空に戻す
         this.link = this.emptyLink()
         this.preview = null
+        this.processing = null
+        console.log(this.processing)
         const canvas_demo = window.document.getElementById('audiodemo')
         canvas_demo.remove()
         })
@@ -224,8 +241,8 @@ export default {
       }
     var file = null; // 選択されるファイル
     var blob = null; // 画像(BLOBデータ)
-    const THUMBNAIL_WIDTH = 300; // 画像リサイズ後の横の長さの最大値
-    const THUMBNAIL_HEIGHT = 300; // 画像リサイズ後の縦の長さの最大値
+    const THUMBNAIL_WIDTH = 500; // 画像リサイズ後の横の長さの最大値
+    const THUMBNAIL_HEIGHT = 500; // 画像リサイズ後の縦の長さの最大値
     // 画像をリサイズする
     var image = new Image();
     var reader = new FileReader();

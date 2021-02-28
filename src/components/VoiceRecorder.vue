@@ -1,8 +1,8 @@
 <template>
     <!-- <vue-record-audio @result="onResult" :mode="press" stream /> -->
     <div>
-  <v-btn @click="startRecording" v-if="status=='ready'">録音開始</v-btn>
-  <v-btn @click="stopRecording" v-if="status=='recording'">録音停止</v-btn>
+  <v-btn @click="startRecording" :loading="processing" :disabled="processing">録音開始</v-btn>
+  <v-btn @click="stopRecording" :disabled="!processing">録音停止</v-btn>
   <ul id="output" v-if="preview"></ul>
   </div>
 </template>
@@ -24,7 +24,8 @@ export default {
         mp3Data: [],
         mp3array: null,
         wavencoder: null,
-        preview: 'on'
+        preview: 'on',
+        processing: false
       }
     },
   methods: {
@@ -45,7 +46,7 @@ initRecording() {
         this.audioExtension = this.getExtension(e.data.type);
         console.log(this.audioData)
         console.log(this.audioExtension)
-
+        this.recorder.stop()
         // ストップが押されたとき
         this.recorder.addEventListener('stop', () => {
           console.log('止めるよ')
@@ -78,17 +79,6 @@ initRecording() {
 
               var context = new (window.AudioContext || window.webkitAudioContext)()
               var source = context.createBufferSource()
-              // var numberOfChannels = waveAudiobuffer.length;
-              // console.log(numberOfChannels)
-              // console.log(waveAudiobuffer.length)
-              // console.log(waveAudiobuffer.sampleRate)
-              // var tmp = context.createBuffer( numberOfChannels, waveAudiobuffer.length, waveAudiobuffer.sampleRate );
-              // for (var i=0; i<numberOfChannels; i++) {
-              //   var channel = tmp.getChannelData(i);
-              //   channel.set( waveAudiobuffer.getChannelData(i), 0);
-              //   // channel.set( buffer2.getChannelData(i), waveAudiobuffer.length);
-              // }
-              // console.log(tmp)
               var vm = this
               context.decodeAudioData(fr.result, function(buffer) {
                 // bufferはAudioBuffer
@@ -127,95 +117,15 @@ initRecording() {
 
                 function(e){ console.log("Error with decoding audio data" + e.err);
               })
-              // .then((buffer) => {
-              //   // var waveencoder
-              //   // source.buffer = buffer;
-              //   // source.connect(context.destination);
-              //   // source.loop = true;
-              //   // console.log(waveencoder)
-              //   // console.log(buffer)
-              //   // console.log(source)
-              //   // // AudioBuffer to Wav
-              //   // waveencoder = audioBufferToWav(buffer)
-              //   // console.log(waveencoder)
-              //   // const audioBlob = new Blob([waveencoder], { 'type' : 'audio/wav' });
-              //   // // var audioBlob = new Blob(this.mp3Data, { 'type' : 'audio/mp3' });
-              //   // const url = URL.createObjectURL(audioBlob);
-              //   // var audiodatalist = {'audioBlob': audioBlob, 'url': url}
-              //   // console.log(audiodatalist)
-              //   // console.log(audioBlob)
-              //   // console.log(url)
-              //   // var output = document.getElementById('output')
-              //   // // 録音が終わったらオーディオタグを表示する
-              //   // var au = document.createElement('audio')
-              //   // au.controls = true
-              //   // au.src = url
-              //   // au.setAttribute('type', 'audio/wav')
-              //   // output.appendChild(au)
-              //   // var br = document.createElement('br')
-              //   // console.log(audiodatalist)
-              //   // console.log(audiodatalist.audioBlob)
-              //   // console.log(audiodatalist.url)
-              //   // this.$emit('audioData', audiodatalist.audioBlob, audiodatalist.url)
-              // })
-              this.status = 'ready';
+              // this.status = 'ready';
               console.log(this.wavencoder)
-              // xhr({
-              //   uri: 'demo/bluejean_short.mp3',
-              //   responseType: 'arraybuffer'
-              // }, function (err, body, resp) {
-              //   if (err) throw err
-
-              //   var anchor = document.createElement('a')
-              //   document.body.appendChild(anchor)
-              //   anchor.style = 'display: none'
-
-              //   audioContext.decodeAudioData(resp, function (buffer) {
-              //     var wav = bufferToWav(buffer)
-              //     var blob = new window.Blob([ new DataView(wav) ], {
-              //       type: 'audio/wav'
-              //     })
-              // this.mp3array = new Int16Array(44100);
-              // var a = fr.readAsArrayBuffer(e.data[0])
-              // console.log(a)
               console.log(b)
-                //one second of silence (get your data from the sourceyou have)
+              //one second of silence (get your data from the sourceyou have)
               console.log(this.mp3array)
               console.log(typeof this.mp3array)
               console.log(this.mp3array.length)
               var mp3array_len = this.mp3array.length
               console.log(mp3array_len)
-              // var sampleBlockSize = 576; //can be anything but make it a multiple of 576 to make encoders life easier
-              // for (var i = 0; i < mp3array_len; i += sampleBlockSize) {
-              // for (var i = 0; i < mp3array_len;) {
-              //   // console.log(i)
-              //   // var sampleChunk = this.mp3array.subarray(i);
-              //   // console.log('ああああ')
-              //   // var sampleChunk = this.mp3array.subarray(i, i + sampleBlockSize);
-              //   var sampleChunk = this.mp3array.subarray()[i];
-              //   // console.log(sampleChunk)
-              //   // console.log(mp3encoder)
-              //   var mp3buf = mp3encoder.encodeBuffer(sampleChunk);
-              //   // console.log('ええええええ')
-              //   // console.log(mp3buf)
-              //   // console.log(mp3buf.length)
-              //   if (mp3buf.length > 0) {
-              //     this.mp3Data.push(mp3buf);
-              //   }
-              //   i++
-              // }
-              // console.log(mp3encoder)
-              // console.log(mp3buf)
-              // // var mp3buf = mp3encoder.encodeBuffer(this.mp3array);
-              // mp3buf = mp3encoder.flush();   //finish writing mp3
-              // // console.log(mp3buf)
-
-              // // if (mp3buf.length > 0) {
-              // //   console.log(mp3buf)
-              // // this.mp3Data.push(new Int8Array(mp3buf));
-              // // }
-              // console.log(this.mp3Data)
-              // console.log(typeof mp3Data)
               console.log(this.wavencoder)
             }
             fr.onerror = eve => {
@@ -235,12 +145,15 @@ initRecording() {
 },
 // 録音開始
 startRecording() {
-    this.status = 'recording';
+    // this.status = 'recording';
     const canvas_demo = window.document.getElementById('audiodemo')
     // 画面にcanvasが出ていたら消す
     if (canvas_demo){
+      this.processing = false
       canvas_demo.remove()
     }
+    this.processing = true
+    console.log(this.processing)
     this.initRecording()
     this.audioData = [];
     this.recorder.start();
@@ -251,6 +164,7 @@ stopRecording() {
   this.status = 'ready';
   this.recorder.stop();
   this.initRecording()
+  this.processing = false
 },
 // オーディオタグの追加
 addAudioTag() {
