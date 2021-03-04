@@ -146,7 +146,7 @@ export default {
     },
     createTweetUrl() {
             // Twitter用のurl作成
-      const url = encodeURIComponent(location.href+ 'page/' +this.link.screenName+'/'+this.link.id)
+      const url = encodeURIComponent(location.href+ 'twpage/' +this.link.screenName+'/'+this.link.id)
       const hashTags = encodeURI('こえろぐ,VoiceBook')
       // const generatedText = encodeURI(this.link.screenName)
       // this.tweetUrl = 'https://twitter.com/intent/tweet?text=' + generatedText + '&hashtags=' + hashTags + '&url=' + url
@@ -155,6 +155,7 @@ export default {
     },
     remove (id) {
       this.$store.dispatch('links/deleteLink', {id})
+      // location.reload()
     },
     getReleasedAtFromNow () {
       if (!this.link || !this.link.createAt) {

@@ -55,7 +55,7 @@ export default {
     next()
   },
   mounted () {
-    // this.init()
+    this.init()
     this.start()
   },
   destroyed () {
@@ -73,6 +73,7 @@ export default {
     },
     remove (id) {
       this.$store.dispatch('links/deleteLink', {id})
+      window.location.reloat()
     }
   },
   // computedには結果がキャッシュされる

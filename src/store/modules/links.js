@@ -22,36 +22,44 @@ export default {
     mutations: {
         // 受け取ったデータpayloadをステートに格納
         init(state, payload) {
-            state.data.unshift(payload)
-            state.alldata.unshift(payload)
+            state.data = []
+            state.alldata = []
         },
         // リンク追加時
-        [ADD](state, payload) {
+        add(state, payload) {
             // DBから受け取ったデータをステートにセット
-            state.data.push(payload)
-            state.data.push(payload)
-        },
-        addData(state, payload) {
-            state.data.unshift(payload)
+            // state.data.unshift(payload)
             state.alldata.unshift(payload)
         },
-        alldata(state, payload) {
+        addData(state, payload) {
+            // state.data.unshift(payload)
+            state.alldata.unshift(payload)
+        },
+        userdata(state, payload) {
             // link_idを追加で更新する
-            state.alldata.push(payload)
+            state.data.unshift(payload)
         },
         // 呼び出すとき
         set(state, payload) {
             const index = state.data.findIndex(link => link.id === payload.id)
             if (index !== -1) {
                 state.data[index] = payload
-                state.data.push(payload)
+
             }
+            state.data.unshift(payload)
+            state.alldata.unshift(payload)
         },
         // 削除時
         [REMOVE](state, payload) {
-            const index = state.data.findIndex(link => link.id === payload.id)
+            const index = state.alldata.findIndex(link => link.id === payload.id)
+            const index_user = state.data.findIndex(link => link.id === payload.id)
+                // state.data.findIndexが-1を返したら（存在しなかったら）、そこをスライスする
             if (index !== -1) {
                 state.data.splice(index, 1)
+                state.alldata.splice(index, 1)
+            } else if (index_user !== -1) {
+                state.data.splice(index_user, 1)
+                state.alldata.splice(index_user, 1)
             }
         }
     },
@@ -108,11 +116,11 @@ export default {
                         // ミューテーションを通してステートを更新する
                         if (change.type === 'added' && change.doc.data().link_id) {
                             // commit(ADD, payload)
-                            commit(ADD, payload)
+                            commit('userdata', change.doc.data())
                         } else if (change.type === 'modified' && change.doc.data().link_id) {
-                            commit('addData', change.doc.data())
+                            commit('userdata', change.doc.data())
                         } else if (change.type === 'removed') {
-                            commit('REMOVE', payload)
+                            commit('REMOVE', change.doc.data())
                         }
                     })
                 },
@@ -137,33 +145,30 @@ export default {
                         }
                         // ステート更新するために配列に格納（DBから直接読み込むと同期が追いつかない）
                         const payload = {
-                            id: change.doc.id,
-                            link_id: (change.doc.id).substr(0, 4),
-                            create_num: change.doc.data().create_num,
-                            link_title: change.doc.data().link_title,
-                            description: change.doc.data().description,
-                            id_str: change.doc.data().id_str,
-                            screenName: change.doc.data().screenName,
-                            createAt: new Date(change.doc.data().createAt.seconds * 1000),
-                            photoURL: change.doc.data().photoURL,
-                            uid: change.doc.data().uid,
-                            userinfo: change.doc.data().userinfo,
-                            voiceURL: change.doc.data().voiceURL,
-                            displayName: change.doc.data().userinfo.displayName
-                        }
-                        commit('init', change.doc.data())
-                            // console.log("init")
-                            // console.log(change.doc.data())
+                                id: change.doc.id,
+                                link_id: (change.doc.id).substr(0, 4),
+                                create_num: change.doc.data().create_num,
+                                link_title: change.doc.data().link_title,
+                                description: change.doc.data().description,
+                                id_str: change.doc.data().id_str,
+                                screenName: change.doc.data().screenName,
+                                createAt: new Date(change.doc.data().createAt.seconds * 1000),
+                                photoURL: change.doc.data().photoURL,
+                                uid: change.doc.data().uid,
+                                userinfo: change.doc.data().userinfo,
+                                voiceURL: change.doc.data().voiceURL,
+                                displayName: change.doc.data().userinfo.displayName
+                            }
                             // ミューテーションを通してステートを更新する
-                            // if (change.type === 'modified' && change.doc.data().link_id) {
-                            //     // commit(ADD, payload)
-                            //     commit('addData', change.doc.data())
-                            // } else if (change.type === 'added' && change.doc.data().link_id) {
-                            //     // // commit(ADD, payload)
-                            //     commit(ADD, change.doc.data())
-                            // } else if (change.type === 'removed') {
-                            //     commit('REMOVE', change.doc.data())
-                            // }
+                        if (change.type === 'modified' && change.doc.data().link_id) {
+                            // commit(ADD, payload)
+                            commit('addData', change.doc.data())
+                        } else if (change.type === 'added' && change.doc.data().link_id) {
+                            // // commit(ADD, payload)
+                            commit('addData', change.doc.data())
+                        } else if (change.type === 'removed') {
+                            commit('REMOVE', change.doc.data())
+                        }
                     })
                 },
                 (error) => {

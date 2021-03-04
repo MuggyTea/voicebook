@@ -22,6 +22,10 @@ const routes = [{
         component: Index
     },
     {
+        path: '/_page/page/:screen_name/:id',
+        redirect: '/page/:screen_name/:id'
+    },
+    {
         path: '/page/:screen_name/:id',
         name: 'LinkPage',
         component: LinkPage,
@@ -66,7 +70,8 @@ const routes = [{
 // VueRouterインスタンスを作成する
 const router = new VueRouter({
     mode: 'history',
-    routes
+    routes,
+    base: process.env_BASE_URL
 })
 
 // VueRouterインスタンスをエクスポートする
