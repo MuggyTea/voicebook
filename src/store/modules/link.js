@@ -64,7 +64,8 @@ export default {
                 this.unsubscribe = null
             }
             // firestoreからデータを検索する
-            this.unsubscribe = LinkRef.where('link_id', '==', payload.link_id).onSnapshot(function(querySnapshot) {
+            this.unsubscribe = LinkRef.where('id', '==', payload.id).onSnapshot(function(querySnapshot) {
+                // this.unsubscribe = LinkRef.doc(payload.id).get().then(querySnapshot => {
                 // データが更新されるたびに呼び出される
                 querySnapshot.docChanges().some(change => {
                     // 時刻がnullのものとログインユーザー以外は表示しない
@@ -85,7 +86,8 @@ export default {
                         photoURL: change.doc.data().photoURL,
                         uid: change.doc.data().uid,
                         userinfo: change.doc.data().userinfo,
-                        voiceURL: change.doc.data().voiceURL
+                        voiceURL: change.doc.data().voiceURL,
+                        displayName: change.doc.data().userinfo.displayName
                     }
                     commit('init', payload)
                         //     // ミューテーションを通してステートを更新する

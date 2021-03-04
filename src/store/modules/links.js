@@ -22,15 +22,17 @@ export default {
     mutations: {
         // 受け取ったデータpayloadをステートに格納
         init(state, payload) {
-            state.data = payload
-            state.alldata = payload
+            state.data.unshift(payload)
+            state.alldata.unshift(payload)
         },
         // リンク追加時
         [ADD](state, payload) {
             // DBから受け取ったデータをステートにセット
             state.data.push(payload)
+            state.data.push(payload)
         },
         addData(state, payload) {
+            state.data.unshift(payload)
             state.alldata.unshift(payload)
         },
         alldata(state, payload) {
@@ -125,7 +127,7 @@ export default {
                 this.unsubscribe = null
             }
             // firestoreからデータを検索する
-            this.unsubscribe = LinkRef.orderBy('createAt', 'desc').limit(15).onSnapshot(querySnapshot => {
+            this.unsubscribe = LinkRef.orderBy('createAt', 'asc').limit(15).onSnapshot(querySnapshot => {
                     // データが更新されるたびに呼び出される
                     querySnapshot.docChanges().some(change => {
                         // 時刻がnullのものとログインユーザー以外は表示しない
@@ -146,19 +148,22 @@ export default {
                             photoURL: change.doc.data().photoURL,
                             uid: change.doc.data().uid,
                             userinfo: change.doc.data().userinfo,
-                            voiceURL: change.doc.data().voiceURL
+                            voiceURL: change.doc.data().voiceURL,
+                            displayName: change.doc.data().userinfo.displayName
                         }
-
-                        // ミューテーションを通してステートを更新する
-                        if (change.type === 'modified' && change.doc.data().link_id) {
-                            // commit(ADD, payload)
-                            commit('addData', change.doc.data())
-                        } else if (change.type === 'added' && change.doc.data().link_id) {
-                            // // commit(ADD, payload)
-                            commit(ADD, change.doc.data())
-                        } else if (change.type === 'removed') {
-                            commit('REMOVE', change.doc.data())
-                        }
+                        commit('init', change.doc.data())
+                            // console.log("init")
+                            // console.log(change.doc.data())
+                            // ミューテーションを通してステートを更新する
+                            // if (change.type === 'modified' && change.doc.data().link_id) {
+                            //     // commit(ADD, payload)
+                            //     commit('addData', change.doc.data())
+                            // } else if (change.type === 'added' && change.doc.data().link_id) {
+                            //     // // commit(ADD, payload)
+                            //     commit(ADD, change.doc.data())
+                            // } else if (change.type === 'removed') {
+                            //     commit('REMOVE', change.doc.data())
+                            // }
                     })
                 },
                 (error) => {

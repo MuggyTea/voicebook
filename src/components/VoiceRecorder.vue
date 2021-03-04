@@ -69,17 +69,11 @@ initRecording() {
       this.recorder = new MediaRecorder(stream);
       console.log(this.recorder)
       if (this.recorder.state == 'inactive') {
-        console.log('startだよ')
-        console.log(this.recorder)
         this.recorder.start();
-        console.log(this.recorder)
         return
       } else {
-        console.log('stopだよ')
-        console.log(this.recorder)
         this.recorder.stop();
       }
-      console.log(this.recorder)
     })
   } else {
     alert('マイクがオフです')
@@ -93,7 +87,6 @@ initRecording() {
     // ストップが押されたとき
     this.recorder.addEventListener('stop', () => {
       console.log('stop')
-      console.log(this.recorder)
       // mp3に変換の準備
       var channels = 1; //1 for mono or 2 for stereo
       var sampleRate = 44100; //44.1khz (normal mp3 samplerate)
@@ -173,17 +166,11 @@ startRecording() {
       this.recorder = new MediaRecorder(stream);
       console.log(this.recorder)
       if (this.recorder.state == 'inactive') {
-        console.log('startだよ')
-        console.log(this.recorder)
         this.recorder.start();
-        console.log(this.recorder)
         return
       } else {
-        console.log('stopだよ')
-        console.log(this.recorder)
         this.recorder.stop();
       }
-      console.log(this.recorder)
     })
   } else {
     alert('マイクがオフです')
@@ -197,15 +184,12 @@ stopRecording() {
   this.recorder.stop()
   // this.initRecording()
   this.recorder.addEventListener('dataavailable', e => {
-    console.log(this.recorder)
     // オーディオデータを格納
     this.audioData.push(e.data);
     this.audioExtension = this.getExtension(e.data.type);
     // this.recorder.stop()
     // ストップが押されたとき
     this.recorder.addEventListener('stop', () => {
-      console.log('stop')
-      console.log(this.recorder)
       // mp3に変換の準備
       var channels = 1; //1 for mono or 2 for stereo
       var sampleRate = 44100; //44.1khz (normal mp3 samplerate)
@@ -257,9 +241,19 @@ stopRecording() {
             vm.$emit('audioData', audioBlob, url, RawArrayBuffer, buffer, waveencoder)
             this.wavprocess = true
             this.processing = false
-            // this.wavprocess = true
-            console.log(this.wavprocess)
-            console.log(this.processing)
+            navigator.mediaDevices.removeEventListener({audio: false, video: false}, stream => {
+              stream.stop()
+              console.log(stream)
+            })
+            // // 音声入力オフ
+            // if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            //   navigator.mediaDevices.removeEventListener({audio: false, video: false}, stream => {
+            //     console.log(stream)
+            //   })
+            // } else {
+            //   alert('マイクがオフです')
+            // }
+            this.audioData = [];
             },
             function(e){ console.log("Error with decoding audio data" + e.err);
           })

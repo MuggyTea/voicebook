@@ -118,15 +118,14 @@ export default {
     return {releasedAtFromNow: this.getReleasedAtFromNow()
     }
   },
-  moutend () {
-    // releasedAtFromNowを1分ごとに更新する
-    window.setInerval(() => {
-      this.releasedAtFromNow = this.getReleasedAtFromNow()
-    }, 1000 * 60)
-  },
+  // moutend () {
+  //   // releasedAtFromNowを1分ごとに更新する
+  //   window.setInerval(() => {
+  //     this.releasedAtFromNow = this.getReleasedAtFromNow()
+  //   }, 1000 * 60)
+  // },
   props: {
     'link': {
-      type: Object,
       required: true
     }
   },

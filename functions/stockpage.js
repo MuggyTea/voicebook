@@ -13,7 +13,8 @@ const func = functions.https.onRequest((req, res) => {
     console.log(res)
     console.log(req)
     const [, , userScreenName, endpoint] = req.path.split('/')
-    return db.doc(endpoint).get().then(snap => {
+    return db.where('id', '==', endpoint).onSnapshot(function(snap) {
+        // return db.doc(endpoint).get().then(snap => {
         if (!snap) {
             res.status(404).end('404 Not Found')
             console.log(res.statue)

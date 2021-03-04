@@ -20,7 +20,7 @@
             "**/node_modules/**"
         ],
         "rewrites": [{
-                "source": "/*",
+                "source": "/page/*/*",
                 "function": "stockpage"
             },
             {

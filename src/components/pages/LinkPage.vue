@@ -47,7 +47,7 @@ export default {
     return {
       // 監視対象のidをdataプロパティにtargetIdとして定義
       // targetIdはpropsのidで更新する
-      targetId: this.link_id
+      targetId: this.id
     }
   },
   // routeの動的セグメント
@@ -63,7 +63,7 @@ export default {
     next()
   },
   mounted () {
-    this.init()
+    // this.init()
     this.start()
   },
   destroyed () {
@@ -74,7 +74,7 @@ export default {
       this.$store.dispatch('link/clear')
     },
     start () {
-      this.$store.dispatch('link/startListener', {link_id: this.targetId})
+      this.$store.dispatch('link/startListener', {id: this.targetId})
     },
     stop () {
       this.$store.dispatch('link/stopListener')

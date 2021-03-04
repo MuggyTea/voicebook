@@ -47,8 +47,8 @@ export default {
     this.getUser(this.screen_name)
   },
   mounted () {
-    this.init()
-    this.start(this.screen_name)
+    // this.init()
+    // this.start(this.screen_name)
     // this.getUser(this.screen_name)
   },
   destroyed () {

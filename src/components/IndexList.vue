@@ -50,12 +50,12 @@ export default {
   beforeRouteUpdate (to, from, next) {
     // 動的セグメントが変わった場合は、コールバック関数でtargetIdを更新する
     this.screen_name = to.params.screen_name
-    this.init()
+    // this.init()
     this.start()
     next()
   },
   mounted () {
-    this.init()
+    // this.init()
     this.start()
   },
   destroyed () {
@@ -67,7 +67,8 @@ export default {
     },
     start () {
       this.$store.dispatch('links/startListenerAll')
-    },    stop () {
+    },
+    stop () {
       this.$store.dispatch('links/stopListener')
     },
     remove (id) {
