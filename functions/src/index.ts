@@ -55,7 +55,7 @@ exports.stockpage = functions.https.onRequest((req: any, res: any) => {
         })
     })
 
-const createHtml = (uname: String, userId: String, photoUrl: string, voiceUrl: string, app_domain: String) => {
+const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: String, app_domain: String) => {
     const SITEURL = `https://${app_domain}`
     const PAGEURL = `${SITEURL}/page/${uname}/${userId}`
     const TITLE = `${uname}' のこえろぐ`
@@ -69,7 +69,7 @@ const createHtml = (uname: String, userId: String, photoUrl: string, voiceUrl: s
     <!-- 共通設定 -->
     <meta property="og:title" content="${TITLE}">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="${photoUrl};">
+    <meta property="og:image" content="`+photoUrl+`;">
     <meta property="og:image:width" content="${OGP_IMG_WIDTH}">
     <meta property="og:image:height" content="${OGP_IMG_HEIGHT}">
     <meta property="og:description" content="${DESCRIPTION}">
@@ -77,18 +77,18 @@ const createHtml = (uname: String, userId: String, photoUrl: string, voiceUrl: s
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="こえろぐ -VoiceBook-">
     <meta property="og:locale" content="ja_JP">
-    <meta property="og:audio" content="` + String.raw`${voiceUrl}` + `">
+    <meta property="og:audio" content="`+voiceUrl+`">
     <!-- /共通設定 -->
   
     <!-- Twitterの設定 -->
     <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="${SITEURL}">
     <meta name="twitter:title" content="${TITLE}">
-    <meta name="twitter:image" content="${photoUrl}">
+    <meta name="twitter:image" content="`+photoUrl+`">
     <meta name="twitter:description" content="${DESCRIPTION}">
     <meta name="twitter:creator" content="${uname}">
-    <meta name="twitter:player" content="` + String.raw`${voiceUrl}` + `">
-    <meta name="twitter:image" content="${photoUrl}">
+    <meta name="twitter:player" content="`+voiceUrl+`">
+    <meta name="twitter:image" content="`+photoUrl+`">
     <meta name="twitter:player:width" content="480px">
     <meta name="twitter:player:height" content="480px">
     <!-- /Twitterの設定 -->
