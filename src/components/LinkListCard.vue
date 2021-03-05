@@ -1,48 +1,15 @@
 <template>
-<!-- <div class="linkcard"> -->
   <v-card
-  class="mx-auto my-12"
+  class="xs-auto my-2"
   width="320px"
   raised
   elevation="10"
   >
-    <!-- <v-container fill-height fluid pa-2>
-      <v-layout align-center fill-height>
-        <v-flex align-end xs12 flexbox>
-    <v-bottom-sheet inset>
-      <v-card tile>
-        <v-progress-linear
-          :value="50"
-          class="my-0"
-          height="3"
-        ></v-progress-linear>
-
-        <v-list>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>{{ formatedTitle }}</v-list-item-title>
-              <v-list-item-subtitle>{{ link.userinfo.displayName }}</v-list-item-subtitle>
-            </v-list-item-content>
-
-            <v-spacer></v-spacer>
-
-            <v-list-item-icon :class="{ 'mx-5': $vuetify.breakpoint.mdAndUp }">
-              <v-btn icon>
-                <v-icon>mdi-pause</v-icon>
-              </v-btn>
-            </v-list-item-icon>
-
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-bottom-sheet> -->
-          <!-- <v-img :src="link.src" max-height="100px"></v-img> -->
-            <v-card-text class="profile__conteiner">
-            <v-btn
-              text
-              color="grey darken-2"
-              v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}"
-              >
+    <v-card-text class="profile__conteiner">
+      <v-btn
+        text
+        color="grey darken-2"
+        v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}">
           <v-avatar
             color="grey lighten-4"
             width="40px"
@@ -54,87 +21,61 @@
             alt="profile"
             >
           </v-avatar>
-            <!-- <v-btn
-              text
-              color="grey darken-2"
-              v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}"
-              > -->
-              <!-- {{ link.userinfo.displayName }} -->
-              {{ link.screenName }}
-            </v-btn>
-            </v-card-text>
-          <router-link
-            v-bind:to="{name: 'LinkPage',
-            params: {link_id: link.link_id, id: link.id, screen_name: link.screenName, photoURL: link.photoURL} }"
-          >
-          <v-img
-          src='../assets/cat-5496162_640.jpg'
-          height="200px"
-          v-if="!link.photoURL"
-          >
-          <!-- <v-btn
-          color = "primary"
-          v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}"
-          >
-          {{ link.userinfo.displayName }}
-          </v-btn> -->
-          </v-img>
-          <v-img
-          v-else
-          :src="link.photoURL"
-          height="200px"
-          >
-          <!-- <v-btn color="indigo"
-          v-bind:to="{name: 'LinkList', params: {screen_name: link.screenName}}"
-          >
-          {{ link.userinfo.displayName }}
-          </v-btn> -->
-          </v-img>
-          </router-link>
-          <audio controls :src="formatedAudio" type="audio/wav"></audio>
-          <router-link
-            v-bind:to="{name: 'LinkPage',
-            params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }">
-          <v-card-title class="card__title">
-            {{ formatedTitle }}
-          </v-card-title>
-          </router-link>
-              <v-card-text class="card__text">
-                <div>{{ formatedDescription }}</div>
-              </v-card-text>
-          <v-card-actions class="card__actions">
-            <!-- <div class="card-body text-left">
-              <p class="card-text" v-html="formatedDescription" />
-              <hr class="mb-3" />
-              <small>{{ formatedReleasedAt }}</small>
-            </div> -->
-            <!-- 削除機能 -->
-            <v-btn text
-              v-if="!userinfo"
-              >
-            </v-btn>
-            <v-btn text
-              v-else-if="link.screenName === userinfo.screenName"
-              v-on:click="remove(link.id)">
-              <font-awesome-icon :icon="['fas', 'trash-alt']">
-              </font-awesome-icon>
-            </v-btn>
-            <v-spacer></v-spacer>
-            <!-- <v-btn text>
-              <font-awesome-icon :icon="['fas', 'heart']" />
-            </v-btn> -->
-            <v-btn text @click="PostingTweet">
-              <font-awesome-icon :icon="['fab', 'twitter']" />
-            </v-btn>
-            <!-- <v-btn text>
-              <font-awesome-icon :icon="['fab', 'youtube']" />
-            </v-btn> -->
-          </v-card-actions>
-        <!-- </v-flex>
-      </v-layout>
-    </v-container> -->
+          {{ link.screenName }}
+      </v-btn>
+    </v-card-text>
+    <router-link
+      v-bind:to="{name: 'LinkPage',
+      params: {link_id: link.link_id, id: link.id, screen_name: link.screenName, photoURL: link.photoURL} }"
+    >
+      <v-img
+      src='../assets/cat-5496162_640.jpg'
+      height="200px"
+      v-if="!link.photoURL"
+      >
+      </v-img>
+      <v-img
+      v-else
+      :src="link.photoURL"
+      height="200px"
+      >
+      </v-img>
+    </router-link>
+    <audio controls :src="formatedAudio" type="audio/wav"></audio>
+    <router-link
+      v-bind:to="{name: 'LinkPage',
+      params: {link_id: link.link_id, id: link.id, screen_name: link.screenName} }">
+        <v-card-title class="card__title">
+          {{ formatedTitle }}
+        </v-card-title>
+    </router-link>
+    <v-card-text class="card__text">
+      <div>{{ formatedDescription }}</div>
+    </v-card-text>
+    <v-card-actions class="card__actions">
+      <!-- 削除機能 -->
+      <v-btn text
+        v-if="!userinfo"
+        >
+      </v-btn>
+      <v-btn text
+        v-else-if="link.screenName === userinfo.screenName"
+        v-on:click="remove(link.id)">
+        <font-awesome-icon :icon="['fas', 'trash-alt']">
+        </font-awesome-icon>
+      </v-btn>
+      <v-spacer></v-spacer>
+      <!-- <v-btn text>
+        <font-awesome-icon :icon="['fas', 'heart']" />
+      </v-btn> -->
+      <v-btn text @click="PostingTweet">
+        <font-awesome-icon :icon="['fab', 'twitter']" />
+      </v-btn>
+      <!-- <v-btn text>
+        <font-awesome-icon :icon="['fab', 'youtube']" />
+      </v-btn> -->
+    </v-card-actions>
   </v-card>
-  <!-- </div> -->
 </template>
 
 <script>
