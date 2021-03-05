@@ -59,8 +59,8 @@ exports.stockpage = functions.https.onRequest((req: any, res: any) => {
 const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: String, app_domain: String, title: String) => {
     const SITEURL = `https://${app_domain}`
     const PAGEURL = `${SITEURL}/page/${uname}/${userId}`
-    const TITLE = `${title}// ラジオ・音源にするほどじゃないけど、ちょっと吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう`
-    const DESCRIPTION = 'ラジオ・音源にするほどじゃないけど、ちょっと吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう'
+    const TITLE = `ラジオ・音源ってほどじゃないけど気軽に吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう | おとろぐ -VoiceBook-`
+    const DESCRIPTION = 'ラジオ・音源ってほどじゃないけど気軽に吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう | おとろぐ -VoiceBook-'
     return `<!DOCTYPE html>
 <html>
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
@@ -96,8 +96,8 @@ const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: S
     <meta name="twitter:title" content="${TITLE}">
     <meta name="twitter:image" content="`+photoUrl+`">
     <meta name="twitter:description" content="${DESCRIPTION}">
-    <!--
     <meta name="twitter:creator" content="${uname}">
+    <!--
     <meta name="twitter:player" content="`+voiceUrl+`">
     <meta name="twitter:player:stream" content="`+voiceUrl+`">
     <meta name="twitter:player:width" content="480px">

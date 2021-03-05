@@ -147,10 +147,10 @@ export default {
     createTweetUrl() {
             // Twitter用のurl作成
       const url = encodeURIComponent(location.href+ 'twpage/' +this.link.screenName+'/'+this.link.id)
-      const hashTags = encodeURI('こえろぐ,VoiceBook')
-      // const generatedText = encodeURI(this.link.screenName)
+      const hashTags = encodeURI('おとろぐ,VoiceBook')
+      const title = encodeURI(this.link.link_title+'|'+this.link.userinfo.displayName+'の音ログ')
       // this.tweetUrl = 'https://twitter.com/intent/tweet?text=' + generatedText + '&hashtags=' + hashTags + '&url=' + url
-      this.tweetUrl = 'https://twitter.com/intent/tweet?hashtags=' + hashTags + '&url=' + url
+      this.tweetUrl = 'https://twitter.com/intent/tweet?text=' + title + '&hashtags=' + hashTags + '&url=' + url + '%0A'
       return this.tweetUrl
     },
     remove (id) {

@@ -51,7 +51,7 @@
     class="indigo lighten-5 py-4 text-center grey--text"
     cols="12"
     >
-    {{ new Date().getFullYear() }} -- <strong>こえろぐ - VoiceBook - </strong>
+    {{ new Date().getFullYear() }} -- <strong>おとろぐ - VoiceBook - </strong>
     </v-col>
     </v-row>
     </v-footer>

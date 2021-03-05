@@ -2,7 +2,7 @@
   <v-card class="nav__bar" flat tile>
     <v-toolbar class="indigo darken-1 grey--text">
       <router-link to="/">
-        <v-toolbar-title><strong>こえろぐ - VoiceBook -</strong></v-toolbar-title>
+        <v-toolbar-title><strong>おとろぐ - VoiceBook -</strong></v-toolbar-title>
         <!-- <v-toolbar-title>Index</v-toolbar-title> -->
       </router-link>
       <v-spacer></v-spacer>
