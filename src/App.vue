@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="main__conteiner">
-      <Navbar />
+      <Navbar class="navbar__conteiner" />
       <RouterView />
     </v-main>
     <Footer />
@@ -37,8 +37,8 @@ a:hover {
 a {
   color: #e8eaf6 !important;
 }
-.container {
-  /* display: flex; */
-  /* margin: auto; */
+.main__conteiner {
+  width: 100%;
+  margin:auto;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="link-list">
+  <div class="cards__list">
     <v-card>
       <v-container fluid grid-list-md>
         <v-layout row wrap>
@@ -99,5 +99,9 @@ export default {
 
 .row__test__delete {
   margin: auto;
+}
+
+.cards__list {
+  width: 100%;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat tile>
+  <v-card class="nav__bar" flat tile>
     <v-toolbar class="indigo darken-1 grey--text">
       <router-link to="/">
         <v-toolbar-title><strong>こえろぐ - VoiceBook -</strong></v-toolbar-title>
@@ -65,3 +65,5 @@ export default {
   }
 }
 </script>
+<style>
+</style>
