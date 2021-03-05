@@ -43,7 +43,8 @@ exports.stockpage = functions.https.onRequest((req: any, res: any) => {
                 // const photoUrl = 'https://test'
             const voiceUrl = stockItem.voiceURL
             const userId = stockItem.id
-            const html = createHtml(uname, userId, photoUrl, voiceUrl, domain)
+            const title = stockItem.link_title
+            const html = createHtml(uname, userId, photoUrl, voiceUrl, domain, title)
             res.status(200).end(html)
             return
         }).catch((err: any) => {
@@ -55,17 +56,26 @@ exports.stockpage = functions.https.onRequest((req: any, res: any) => {
         })
     })
 
-const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: String, app_domain: String) => {
+const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: String, app_domain: String, title: String) => {
     const SITEURL = `https://${app_domain}`
     const PAGEURL = `${SITEURL}/page/${uname}/${userId}`
-    const TITLE = `${uname}' のこえろぐ`
-    const DESCRIPTION = '音声を録音して投稿するサービス。喋って日記を付けたり演奏や歌を投稿してみよう'
+    const TITLE = `${title}// ラジオ・音源にするほどじゃないけど、ちょっと吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう`
+    const DESCRIPTION = 'ラジオ・音源にするほどじゃないけど、ちょっと吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう'
     return `<!DOCTYPE html>
 <html>
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>こえろぐ -VoiceBook- </title>
+    <title>おとろぐ -VoiceBook- </title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9C97LRWCX4"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9C97LRWCX4');
+    </script>
     <!-- 共通設定 -->
     <meta property="og:title" content="${TITLE}">
     <meta property="og:type" content="article">
@@ -81,16 +91,18 @@ const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: S
     <!-- /共通設定 -->
   
     <!-- Twitterの設定 -->
-    <meta name="twitter:card" content="player">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="${SITEURL}">
     <meta name="twitter:title" content="${TITLE}">
     <meta name="twitter:image" content="`+photoUrl+`">
     <meta name="twitter:description" content="${DESCRIPTION}">
+    <!--
     <meta name="twitter:creator" content="${uname}">
     <meta name="twitter:player" content="`+voiceUrl+`">
-    <meta name="twitter:image" content="`+photoUrl+`">
+    <meta name="twitter:player:stream" content="`+voiceUrl+`">
     <meta name="twitter:player:width" content="480px">
     <meta name="twitter:player:height" content="480px">
+    -->
     <!-- /Twitterの設定 -->
   </head>
   <body>

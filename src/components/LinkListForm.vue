@@ -36,8 +36,8 @@
               </v-btn>
           </v-card-actions>
           <!-- サムネイル表示領域 -->
-          <output class="form__output" v-if="preview" width="500px" height="500px">
-              <canvas id="canvas"></canvas>
+          <output class="form__output" v-if="preview">
+              <canvas id="canvas" width="320px" height="320px"></canvas>
           </output>
         <div class="card-footer text-right">
             <v-btn dark
@@ -218,6 +218,7 @@ export default {
       this.$refs.image.click()
     },
     onFilePicked (event) {
+      this.preview = null
       // フォームでファイルが選択されたら実行される
       if (event.target.files.length === 0) {
         this.reset()
@@ -230,8 +231,8 @@ export default {
       }
     var file = null; // 選択されるファイル
     var blob = null; // 画像(BLOBデータ)
-    const THUMBNAIL_WIDTH = 500; // 画像リサイズ後の横の長さの最大値
-    const THUMBNAIL_HEIGHT = 500; // 画像リサイズ後の縦の長さの最大値
+    const THUMBNAIL_WIDTH = 320; // 画像リサイズ後の横の長さの最大値
+    const THUMBNAIL_HEIGHT = 320; // 画像リサイズ後の縦の長さの最大値
     // 画像をリサイズする
     var image = new Image();
     var reader = new FileReader();
@@ -249,6 +250,8 @@ export default {
           width = THUMBNAIL_HEIGHT * ratio_h;
           height = THUMBNAIL_HEIGHT;
         }
+        // width = THUMBNAIL_WIDTH;
+        // height = THUMBNAIL_WIDTH;
         // サムネ描画用canvasのサイズを上で算出した値に変更
         var canvas = document.getElementById('canvas');
         // canvas.width = width
@@ -258,7 +261,7 @@ export default {
         // ctx.clearRect(0,0,width,height);
         // // canvasにサムネイルを描画
         // ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
-        ctx.drawImage(image,0,0,image.width, image.height, 0, 0, width, height);
+        ctx.drawImage(image,0,0, image.width, image.height, 0, 0, width, height);
       }
       // previewに読み込み結果（データURL）を代入する
       // previewに値が入ると<output>につけたv-ifがtrueと判定される
