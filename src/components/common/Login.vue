@@ -34,7 +34,8 @@ export default {
       try {
         this.processing = true
         this.$store.dispatch('auth/login')
-        location.reload()
+        this.$store.dispatch('auth/getUserdata')
+        // location.reload()
       } catch (e) {
         this.processing = false
       } finally {

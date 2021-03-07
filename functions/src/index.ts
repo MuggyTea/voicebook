@@ -63,7 +63,8 @@ const createHtml = (uname: String, userId: String, photoUrl: String, voiceUrl: S
     const DESCRIPTION = 'ラジオ・音源ってほどじゃないけど気軽に吐き出したい聞いてほしい。自分用ログに。喋って日記を付けたり演奏や歌を投稿してみよう | おとろぐ -VoiceBook-'
     return `<!DOCTYPE html>
 <html>
-  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+    <!-- TOPページ以外 -->
+    <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>おとろぐ -VoiceBook- </title>
